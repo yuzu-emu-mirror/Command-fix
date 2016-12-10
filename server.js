@@ -31,7 +31,7 @@ client.on('ready', () => {
   data.readBans();
 
   logger.info('Startup complete. Bot is now online and connected to server.');
-  app.logChannel.sendMessage(`Startup complete.`);
+  // app.logChannel.sendMessage(`Startup complete.`);
 });
 
 client.on('message', message => {
