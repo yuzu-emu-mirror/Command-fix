@@ -1,7 +1,7 @@
 var app = require('../app.js');
 var logger = require('../logging.js');
 
-var regex = /\#\d./;
+var regex = /\#\d+./;
 
 exports.trigger = function(message) {
   return regex.test(message.content);
