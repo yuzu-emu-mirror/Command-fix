@@ -8,6 +8,7 @@ var app = require('./app.js');
 var data = require('./data.js');
 
 var cachedModules = [];
+var cachedTriggers = [];
 var client = new discord.Client();
 
 function findArray(haystack, arr) {
@@ -21,6 +22,11 @@ client.on('ready', () => {
   // Cache all command modules.
   require("fs").readdirSync('./commands/').forEach(function(file) {
     cachedModules[file] = require(`./commands/${file}`);
+  });
+
+  // Cache all triggers.
+  require("fs").readdirSync('./triggers/').forEach(function(file) {
+    cachedTriggers.push(require(`./triggers/${file}`));
   });
 
   // Initalize app channels.
@@ -80,6 +86,15 @@ client.on('message', message => {
     } else {
       // Not a valid command.
     }
+  } else {
+    // This is a normal channel message.
+    cachedTriggers.forEach(function(trigger) {
+        if (trigger.roles == undefined || findArray(message.member.roles.map(function(x) { return x.name; }), trigger.roles)) {
+          if (trigger.trigger(message) == true) {
+              trigger.execute(message);
+          }
+        }
+    });
   }
 
 });
