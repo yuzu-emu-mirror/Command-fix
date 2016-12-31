@@ -11,7 +11,8 @@ exports.trigger = function(message) {
 exports.execute = function(message) {
   let match = regex.exec(message.content);
   if (match) {
-    let url = `https://github.com/citra-emu/citra/pull/${match[0].substring(1).trim()}`
+    let url = `https://github.com/citra-emu/citra/pull/${match[0].trim().substring(1)}`
+    logger.info(url);
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         message.channel.sendMessage(`Github Pull Request: ${url}`);
