@@ -1,3 +1,4 @@
+var request = require('request');
 var app = require('../app.js');
 var logger = require('../logging.js');
 
@@ -8,9 +9,15 @@ exports.trigger = function(message) {
 }
 
 exports.execute = function(message) {
-  var match = regex.exec(message.content);
+  let match = regex.exec(message.content);
   if (match) {
-    var msg = `Github Pull Request: https://github.com/citra-emu/citra/pull/${match[0].substring(1).trim()}`;
-    message.channel.sendMessage(msg);
+    let url = `https://github.com/citra-emu/citra/pull/${match[0].substring(1).trim()}`
+    request(url, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        message.channel.sendMessage(`Github Pull Request: ${url}`);
+      } else {
+        // Github PR does not exist.
+      }
+    });
   }
 }
