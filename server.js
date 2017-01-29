@@ -90,7 +90,7 @@ client.on('message', message => {
     } else {
       // Not a valid command.
     }
-  } else {
+  } else if (message.author.bot == false) {
     // This is a normal channel message.
     cachedTriggers.forEach(function(trigger) {
         if (trigger.roles == undefined || findArray(message.member.roles.map(function(x) { return x.name; }), trigger.roles)) {
