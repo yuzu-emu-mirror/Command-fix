@@ -22,7 +22,7 @@ var logger = new winston.Logger({
 if (process.env.NODE_ENV == 'production') {
     // Setup logging for LogDNA cloud logging.
     logger.add(winston.transports.Logdna, {
-        level: 'silly',
+        level: 'info',
         key: config.logdnaKey,
         ip: ip.address(),
         hostname: os.hostname(),
