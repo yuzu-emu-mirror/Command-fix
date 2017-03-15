@@ -1,7 +1,10 @@
 var config = require('config');
 var winston = require('winston');
-winston.emitErrs = true;
+var logdna = require('logdna');
+var ip = require('ip');
+var os = require("os");
 
+winston.emitErrs = true;
 var logger = new winston.Logger({
     transports: [
         new winston.transports.Console({
