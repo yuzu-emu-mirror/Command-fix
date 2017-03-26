@@ -2,23 +2,36 @@ var request = require('request');
 var app = require('../app.js');
 var logger = require('../logging.js');
 
-var regex = /[^\<]\#\d+[^\>]/;
+var regex = /[^\<\\]\#(\d+)/ig;
 
 exports.trigger = function(message) {
-  return regex.test(message.content);
+  return new RegExp(regex).test(message.content);
 }
 
 exports.execute = function(message) {
-  let match = regex.exec(message.content);
-  if (match) {
-    let url = `https://github.com/citra-emu/citra/pull/${match[0].trim().substring(1)}`
+  let matcher = new RegExp(regex);
+  let match = matcher.exec(message.content);
+  let matched = [];
+
+  while(match != null) {
+    if(matched.indexOf(match[1]) == -1) {
+      matched.push(match[1]);
+    } else {
+      match = matcher.exec(message.content);
+      continue;
+    }
+
+    let url = `https://github.com/citra-emu/citra/pull/${match[1]}`;
     logger.info(url);
+
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         message.channel.sendMessage(`Github Pull Request: ${url}`);
       } else {
-        // Github PR does not exist.
+        logger.info(`PR #{issue} does not exist.`)
       }
     });
+
+    match = matcher.exec(message.content);
   }
 }
