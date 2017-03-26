@@ -21,12 +21,18 @@ client.on('ready', () => {
 
   // Cache all command modules.
   require("fs").readdirSync('./commands/').forEach(function(file) {
-    cachedModules[file] = require(`./commands/${file}`);
+    // Load the module if it's a script.
+    if (path.extname(file) == '.js') {
+      cachedModules[file] = require(`./commands/${file}`);
+    }
   });
 
   // Cache all triggers.
   require("fs").readdirSync('./triggers/').forEach(function(file) {
-    cachedTriggers.push(require(`./triggers/${file}`));
+    // Load the trigger if it's a script.
+    if (path.extname(file) == '.js') {
+      cachedTriggers.push(require(`./triggers/${file}`));
+    }
   });
 
   // Initalize app channels.
