@@ -23,6 +23,7 @@ client.on('ready', () => {
   require("fs").readdirSync('./commands/').forEach(function(file) {
     // Load the module if it's a script.
     if (path.extname(file) == '.js') {
+      logger.info(`Loaded module: ${file}`);
       cachedModules[file] = require(`./commands/${file}`);
     }
   });
@@ -31,6 +32,7 @@ client.on('ready', () => {
   require("fs").readdirSync('./triggers/').forEach(function(file) {
     // Load the trigger if it's a script.
     if (path.extname(file) == '.js') {
+      logger.info(`Loaded trigger: ${file}`);
       cachedTriggers.push(require(`./triggers/${file}`));
     }
   });
