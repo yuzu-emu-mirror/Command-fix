@@ -106,7 +106,7 @@ require("fs").readdirSync('./triggers/').forEach(function(file) {
   // Load the trigger if it's a script.
   if (path.extname(file) == '.js') {
     logger.info(`Loaded trigger: ${file}`);
-    cachedTriggers[file] = require(`./triggers/${file}`);
+    cachedTriggers.push(require(`./triggers/${file}`));
   }
 });
 
