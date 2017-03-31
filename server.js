@@ -90,6 +90,7 @@ client.on('message', message => {
 });
 
 // Cache all command modules.
+cachedModules = [];
 require("fs").readdirSync('./commands/').forEach(function(file) {
   // Load the module if it's a script.
   if (path.extname(file) == '.js') {
@@ -99,6 +100,7 @@ require("fs").readdirSync('./commands/').forEach(function(file) {
 });
 
 // Cache all triggers.
+cachedTriggers = [];
 require("fs").readdirSync('./triggers/').forEach(function(file) {
   // Load the trigger if it's a script.
   if (path.extname(file) == '.js') {
