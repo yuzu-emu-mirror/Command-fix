@@ -27,8 +27,6 @@ exports.execute = function(message) {
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         message.channel.sendMessage(`Github Pull Request: ${url}`);
-      } else {
-        logger.info(`PR #{issue} does not exist.`)
       }
     });
 
