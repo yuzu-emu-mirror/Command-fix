@@ -18,34 +18,11 @@ function findArray(haystack, arr) {
 };
 
 client.on('ready', () => {
-
-  // Cache all command modules.
-  require("fs").readdirSync('./commands/').forEach(function(file) {
-    // Load the module if it's a script.
-    if (path.extname(file) == '.js') {
-      logger.info(`Loaded module: ${file}`);
-      cachedModules[file] = require(`./commands/${file}`);
-    }
-  });
-
-  // Cache all triggers.
-  require("fs").readdirSync('./triggers/').forEach(function(file) {
-    // Load the trigger if it's a script.
-    if (path.extname(file) == '.js') {
-      logger.info(`Loaded trigger: ${file}`);
-      cachedTriggers.push(require(`./triggers/${file}`));
-    }
-  });
-
   // Initalize app channels.
   app.logChannel = client.channels.get(config.logChannel);
   app.guild = app.logChannel.guild;
 
-  data.readWarnings();
-  data.readBans();
-
-  logger.info('Startup complete. Bot is now online and connected to server.');
-  // app.logChannel.sendMessage(`Startup complete.`);
+  logger.info('Bot is now online and connected to server.');
 });
 
 client.on('message', message => {
@@ -110,7 +87,30 @@ client.on('message', message => {
         }
     });
   }
-
 });
+
+// Cache all command modules.
+cachedModules = [];
+require("fs").readdirSync('./commands/').forEach(function(file) {
+  // Load the module if it's a script.
+  if (path.extname(file) == '.js') {
+    logger.info(`Loaded module: ${file}`);
+    cachedModules[file] = require(`./commands/${file}`);
+  }
+});
+
+// Cache all triggers.
+cachedTriggers = [];
+require("fs").readdirSync('./triggers/').forEach(function(file) {
+  // Load the trigger if it's a script.
+  if (path.extname(file) == '.js') {
+    logger.info(`Loaded trigger: ${file}`);
+    cachedTriggers.push(require(`./triggers/${file}`));
+  }
+});
+
+data.readWarnings();
+data.readBans();
+logger.info('Startup completed.');
 
 client.login(config.clientLoginToken);
