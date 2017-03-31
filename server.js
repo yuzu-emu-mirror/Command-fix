@@ -55,7 +55,7 @@ client.on('message', message => {
         return false;
       }
 
-      logger.info(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered command: ${message.content}`);
+      logger.info(`${message.author.username} ${message.author} [Channel: ${message.channel}] executed command: ${message.content}`);
       message.delete();
 
       try {
@@ -80,6 +80,7 @@ client.on('message', message => {
     cachedTriggers.forEach(function(trigger) {
         if (trigger.roles == undefined || findArray(message.member.roles.map(function(x) { return x.name; }), trigger.roles)) {
           if (trigger.trigger(message) == true) {
+              logger.info(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
               try {
                 trigger.execute(message);
               } catch (err) { logger.error(err); }
@@ -105,7 +106,7 @@ require("fs").readdirSync('./triggers/').forEach(function(file) {
   // Load the trigger if it's a script.
   if (path.extname(file) == '.js') {
     logger.info(`Loaded trigger: ${file}`);
-    cachedTriggers.push(require(`./triggers/${file}`));
+    cachedTriggers[file] = require(`./triggers/${file}`);
   }
 });
 
