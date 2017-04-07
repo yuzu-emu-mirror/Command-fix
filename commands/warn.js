@@ -4,7 +4,7 @@ var data = require('../data.js');
 var logger = require('../logging.js');
 var UserWarning = require('../models/UserWarning.js');
 
-exports.roles = ['Admins', 'Moderators', 'Secret', 'Helpers'];
+exports.roles = ['Admins', 'Moderators'];
 exports.command = function(message) {
   message.mentions.users.map((user) => {
     var count = app.warnings.filter(x => x.id == user.id && !x.cleared).length || 0;
@@ -12,7 +12,7 @@ exports.command = function(message) {
 
     logger.info(`${message.author.username} ${message.author} has warned ${user.username} ${user} [${count} + 1].`);
     app.logChannel.sendMessage(`${message.author} has warned ${user} [${count} + 1].`);
-    
+
     app.warnings.push(new UserWarning(user.id, user.username, message.author.id, message.author.username, count));
     data.flushWarnings();
 
