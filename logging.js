@@ -19,7 +19,7 @@ var logger = new winston.Logger({
     exitOnError: false
 });
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV == 'production' && config.logdnaKey) {
     // Setup logging for LogDNA cloud logging.
     logger.add(winston.transports.Logdna, {
         level: 'info',
