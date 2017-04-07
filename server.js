@@ -106,8 +106,12 @@ cachedModules = [];
 require("fs").readdirSync('./commands/').forEach(function(file) {
   // Load the module if it's a script.
   if (path.extname(file) == '.js') {
-    logger.info(`Loaded module: ${file}`);
-    cachedModules[file] = require(`./commands/${file}`);
+    if (file.includes('.disabled')) {
+      logger.info(`Did not load disabled module: ${file}`);
+    } else {
+      logger.info(`Loaded module: ${file}`);
+      cachedModules[file] = require(`./commands/${file}`);
+    }
   }
 });
 
@@ -116,8 +120,12 @@ cachedTriggers = [];
 require("fs").readdirSync('./triggers/').forEach(function(file) {
   // Load the trigger if it's a script.
   if (path.extname(file) == '.js') {
-    logger.info(`Loaded trigger: ${file}`);
-    cachedTriggers.push(require(`./triggers/${file}`));
+    if (file.includes('.disabled')) {
+      logger.info(`Did not load disabled trigger: ${file}`);
+    } else {
+      logger.info(`Loaded trigger: ${file}`);
+      cachedTriggers.push(require(`./triggers/${file}`));
+    }
   }
 });
 
