@@ -17,6 +17,10 @@ function findArray(haystack, arr) {
     });
 };
 
+process.on('unhandledRejection', function onError(err) {
+  throw err;
+});
+
 client.on('ready', () => {
   // Initalize app channels.
   app.logChannel = client.channels.get(config.logChannel);
@@ -66,12 +70,19 @@ client.on('message', message => {
         }
       } catch (err) { logger.error(err); }
 
+      // Warn after running command?
       try {
         // Check if the command requires a warning.
         if (cmd != 'warn' && cachedModule.warn == true) {
-          cachedModules['warn.js'].command(message);
+          // Access check to see if the user has privilages to warn.
+          let warnCommand = cachedModules['warn.js'];
+          if (findArray(message.member.roles.map(function(x) { return x.name; }), warnCommand.roles)) {
+            // They are allowed to warn because they are in warn's roles.
+            warnCommand.command(message);
+          }
         }
       } catch (err) { logger.error(err); }
+
     } else {
       // Not a valid command.
     }
