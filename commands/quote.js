@@ -1,7 +1,7 @@
 var app = require('../app.js');
 var logger = require('../logging.js');
 
-exports.roles = ['Admins', 'Moderators', 'Secret'];
+exports.roles = ['Admins', 'Moderators'];
 exports.command = function(message, reply) {
   let replyMessage = 'Hello.';
   if (reply == null) {

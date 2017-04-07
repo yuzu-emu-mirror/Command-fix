@@ -17,6 +17,10 @@ function findArray(haystack, arr) {
     });
 };
 
+process.on('unhandledRejection', function onError(err) {
+  throw err;
+});
+
 client.on('ready', () => {
   // Initalize app channels.
   app.logChannel = client.channels.get(config.logChannel);
@@ -66,12 +70,19 @@ client.on('message', message => {
         }
       } catch (err) { logger.error(err); }
 
+      // Warn after running command?
       try {
         // Check if the command requires a warning.
         if (cmd != 'warn' && cachedModule.warn == true) {
-          cachedModules['warn.js'].command(message);
+          // Access check to see if the user has privilages to warn.
+          let warnCommand = cachedModules['warn.js'];
+          if (findArray(message.member.roles.map(function(x) { return x.name; }), warnCommand.roles)) {
+            // They are allowed to warn because they are in warn's roles.
+            warnCommand.command(message);
+          }
         }
       } catch (err) { logger.error(err); }
+
     } else {
       // Not a valid command.
     }
@@ -95,8 +106,12 @@ cachedModules = [];
 require("fs").readdirSync('./commands/').forEach(function(file) {
   // Load the module if it's a script.
   if (path.extname(file) == '.js') {
-    logger.info(`Loaded module: ${file}`);
-    cachedModules[file] = require(`./commands/${file}`);
+    if (file.includes('.disabled')) {
+      logger.info(`Did not load disabled module: ${file}`);
+    } else {
+      logger.info(`Loaded module: ${file}`);
+      cachedModules[file] = require(`./commands/${file}`);
+    }
   }
 });
 
@@ -105,8 +120,12 @@ cachedTriggers = [];
 require("fs").readdirSync('./triggers/').forEach(function(file) {
   // Load the trigger if it's a script.
   if (path.extname(file) == '.js') {
-    logger.info(`Loaded trigger: ${file}`);
-    cachedTriggers.push(require(`./triggers/${file}`));
+    if (file.includes('.disabled')) {
+      logger.info(`Did not load disabled trigger: ${file}`);
+    } else {
+      logger.info(`Loaded trigger: ${file}`);
+      cachedTriggers.push(require(`./triggers/${file}`));
+    }
   }
 });
 
