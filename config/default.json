@@ -15,6 +15,9 @@
     "updates": { "reply": "You can check our latest updates on *Github*. <https://github.com/citra-emu/citra/pulse>"},
     "download": { "reply": "Please only download from the official *Citra* website, as downloading from other sources is not supported here. <https://citra-emu.org/download/>"},
     "legal": { "reply": "*Citra* is legal, we don't support illegal activities. Dumping your purchased games and system files from your 3DS is legal. Downloading them is not."},
-    "building": { "reply": "Please refer to our building guides.\nWindows: <https://citra-emu.org/wiki/Building-for-Windows> \nmacOS: <https://citra-emu.org/wiki/Building-for-macOS> \nLinux: <https://citra-emu.org/wiki/Building-for-Linux>"}
+    "building": { "reply": "Please refer to our building guides.\nWindows: <https://citra-emu.org/wiki/Building-for-Windows> \nmacOS: <https://citra-emu.org/wiki/Building-for-macOS> \nLinux: <https://citra-emu.org/wiki/Building-for-Linux>"},
+    "controller": { "reply": "This forum topic tells you how to __configure your gamepad / controller__: <https://community.citra-emu.org/t/temporary-controller-configurations-for-citra/1061>"},
+    "issues": { "reply": "This forum topic lists __known issues in games and their workarounds__: <https://community.citra-emu.org/t/known-problems-typical-issues-and-their-workarounds/1317> \nPlease read it carefully. It includes help with most games"},
+    "forum": { "reply": "This question might be more suitable for the *Citra* forum. <https://community.citra-emu.org/"}
   }
 }
