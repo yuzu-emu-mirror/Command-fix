@@ -23,8 +23,11 @@ cd discord-bot
 npm install
 ```
 Create new JSON file for bot config with the following contents in the directory specified below:
+
 **For Development:** `./config/development.json`
+
 **For Production:** `./config/production.json`
+
 ```JSON
 {
   "logChannel": "",
@@ -32,6 +35,7 @@ Create new JSON file for bot config with the following contents in the directory
 } 
 ```
 To get `logChannel`, type `\#YOUR_CHANNEL_NAME` in your Discord server chat.
+
 Copy string of numbers **after** `#` into `"logChannel": ""`
 
 ![](http://i.imgur.com/PdcXVCD.png)
@@ -41,9 +45,13 @@ Copy App Bot User token to `"clientLoginToken": ""`
 ![](http://i.imgur.com/YTGZju9.png)
 
 # Running Bot
+
 ##### For Production
+
 `./start.sh` Requires a config/production.json file.
+
 ##### For Development
+
 `node server.js`   Requires a config/development.json file.
 
 # License
