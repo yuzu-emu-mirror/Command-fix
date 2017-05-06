@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Citra bot for Discord",
   "author": "chris062689 <chris062689@gmail.com>",
-  "scripts": {
-    "start": "node server.js"
-  },
   "preferGlobal": true,
   "private": true,
   "subdomain": "citra-emu",
