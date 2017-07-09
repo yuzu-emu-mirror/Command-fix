@@ -40,7 +40,7 @@ client.on('message', message => {
     return;
   }
 
-  logger.verbose(`${message.author.username} ${message.author} [Channel: ${message.channel}]: ${message.content}`);
+  logger.verbose(`${message.author.username} ${message.author} [Channel: ${message.channel.name} ${message.channel}]: ${message.content}`);
 
   if (message.content.startsWith(config.commandPrefix)) {
     let cmd = message.content.split(' ')[0].slice(1);
