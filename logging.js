@@ -8,11 +8,15 @@ winston.emitErrs = true;
 var logger = new winston.Logger({
     transports: [
         new winston.transports.Console({
-          level: 'silly',
+          level: 'warn',
           handleExceptions: true,
           humanReadableUnhandledException: true,
           json: false,
           colorize: true
+        }),
+        new winston.transports.File({
+          filename: 'discord.log',
+          level: 'silly'
         })
     ],
     handleExceptions: true,
