@@ -20,6 +20,6 @@
     "issues": { "reply": "This forum topic lists __known issues in games and their workarounds__: <https://community.citra-emu.org/t/known-problems-typical-issues-and-their-workarounds/1317> \nPlease read it carefully. It includes help with most games"},
     "forum": { "reply": "This question might be more suitable for the *Citra* forum. <https://community.citra-emu.org/>"},
     "game": { "reply": "Click here to view our game compatibility list: <https://citra-emu.org/game/>"},
-    "log": { "reply": "This forum topic tells you how to __get the log file__: <to https://community.citra-emu.org/t/how-to-upload-the-log-file/296>"}
+    "log": { "reply": "This forum topic tells you how to __get the log file__: <https://community.citra-emu.org/t/how-to-upload-the-log-file/296>"}
   }
 }
