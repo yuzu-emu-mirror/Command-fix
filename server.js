@@ -2,6 +2,7 @@ var discord = require('discord.js');
 var fs = require('fs');
 var path = require('path');
 var config = require('config');
+var schedule = require('node-schedule');
 
 var logger = require('./logging.js');
 var app = require('./app.js');
