@@ -39,7 +39,8 @@ client.on("guildMemberRemove", (member) => {
 });
 
 // Output the stats for app.stats every 24 hours.
-schedule.scheduleJob({ hour: 23, minute: 59 }, function(){
+// Server is in UTC mode, 11:30 EST would be 03:30 UTC.
+schedule.scheduleJob({ hour: 3, minute: 30 }, function(){
   logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
   app.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
 
