@@ -16,6 +16,8 @@ exports.command = function(message) {
     app.warnings.push(new UserWarning(user.id, user.username, message.author.id, message.author.username, count));
     data.flushWarnings();
 
+    app.stats.warnings += 1;
+
     if (count + 1 >= 3) {
       app.logChannel.sendMessage(`.ban ${user}`);
     }

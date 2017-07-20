@@ -19,6 +19,7 @@ exports.command = function(message) {
       app.logChannel.sendMessage(`Error banning ${user} ${user.username}`);
       logger.error(`Error banning ${user.toString()} ${user} ${user.username}.`, error);
     });
+
     data.flushBans();
   });
 }

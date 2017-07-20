@@ -29,6 +29,25 @@ client.on('ready', () => {
   logger.info('Bot is now online and connected to server.');
 });
 
+client.on("guildMemberAdd", (member) => {
+  app.stats.joins += 1;
+});
+
+client.on("guildMemberRemove", (member) => {
+  app.stats.leaves += 1;
+});
+
+// Output the stats for app.stats every 24 hours.
+schedule.scheduleJob({ hour: 23, minute: 59 }, function(){
+  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
+  app.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
+
+  // Clear the stats for the day.
+  app.stats.joins = 0;
+  app.stats.leaves = 0;
+  app.stats.warnings = 0;
+});
+
 client.on('message', message => {
   if (message.author.bot && message.content.startsWith('.ban') == false) { return; }
 
