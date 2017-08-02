@@ -21,6 +21,12 @@ exports.execute = function(message) {
       continue;
     }
 
+    // We do not want to automatically match old issues / PRs.
+    // This usually happens when someone messes up pining another person or
+    // in general conversation.
+    // ex: You're #1!
+    if (match[1] <= 2000) { return; }
+
     let url = `https://github.com/citra-emu/citra/pull/${match[1]}`;
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
