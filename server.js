@@ -76,7 +76,7 @@ client.on('message', message => {
       // Check access permissions.
       if (cachedModule.roles != undefined && findArray(message.member.roles.map(function(x) { return x.name; }), cachedModule.roles) == false) {
         app.logChannel.sendMessage(`${message.author} attempted to use admin command: ${message.content}`);
-        logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`)
+        logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
         return false;
       }
 
@@ -112,7 +112,7 @@ client.on('message', message => {
     cachedTriggers.forEach(function(trigger) {
         if (trigger.roles == undefined || findArray(message.member.roles.map(function(x) { return x.name; }), trigger.roles)) {
           if (trigger.trigger(message) == true) {
-              logger.info(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
+              logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
               try {
                 trigger.execute(message);
               } catch (err) { logger.error(err); }

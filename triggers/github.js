@@ -22,8 +22,6 @@ exports.execute = function(message) {
     }
 
     let url = `https://github.com/citra-emu/citra/pull/${match[1]}`;
-    logger.info(url);
-
     request(url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         message.channel.sendMessage(`Github Pull Request: ${url}`);

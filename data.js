@@ -8,7 +8,7 @@ function readWarnings() {
     if (err && err.code === 'ENOENT') { return; }
     if (err) { logger.error(err); }
     app.warnings = JSON.parse(data);
-    logger.info('Loaded warnings file.');
+    logger.debug('Loaded warnings file.');
   });
 }
 
@@ -18,7 +18,7 @@ function readBans() {
     if (err && err.code === 'ENOENT') { return; }
     if (err) { logger.error(err); }
     app.bans = JSON.parse(data);
-    logger.info('Loaded bans file.');
+    logger.debug('Loaded bans file.');
   });
 }
 
