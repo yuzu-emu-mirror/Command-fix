@@ -1,12 +1,12 @@
-var discord = require('discord.js');
-var fs = require('fs');
-var path = require('path');
-var config = require('config');
-var schedule = require('node-schedule');
+const discord = require('discord.js');
+const fs = require('fs');
+const path = require('path');
+const config = require('config');
+const schedule = require('node-schedule');
 
-var logger = require('./logging.js');
-var app = require('./app.js');
-var data = require('./data.js');
+const logger = require('./logging.js');
+const app = require('./app.js');
+const data = require('./data.js');
 
 var cachedModules = [];
 var cachedTriggers = [];
@@ -152,6 +152,11 @@ require("fs").readdirSync('./triggers/').forEach(function(file) {
 
 data.readWarnings();
 data.readBans();
-logger.info('Startup completed.');
 
-client.login(config.clientLoginToken);
+if (config.clientLoginToken) {
+  client.login(config.clientLoginToken);
+  logger.info('Startup completed. Established connection to Discord.');
+} else {
+  logger.error('Cannot establish connection to Discord. Client login token is not defined.');
+  throw('MISSING_CLIENT_LOGIN_TOKEN');
+}
