@@ -26,7 +26,7 @@ if (config.enableLogdnaLogging === true && config.logdnaKey) {
         key: config.logdnaKey,
         ip: ip.address(),
         hostname: os.hostname(),
-        app: 'services-services'
+        app: config.app
     });
     logger.debug('[logging] Started LogDNA winston transport.');
 } else if (config.enableLogdna === true) {
