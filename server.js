@@ -12,15 +12,19 @@ var cachedModules = [];
 var cachedTriggers = [];
 var client = new discord.Client();
 
+process.on('unhandledRejection', function onError(err) {
+  logger.error(err);
+});
+
+// Verify configuration options are set properly.
+if (!config.logChannel) { throw 'Log Channel is missing from the configuration file.'; }
+if (!config.clientLoginToken) { throw 'Client Login Token is missing from the configuration file.'; }
+
 function findArray(haystack, arr) {
     return arr.some(function (v) {
         return haystack.indexOf(v) >= 0;
     });
 };
-
-process.on('unhandledRejection', function onError(err) {
-  throw err;
-});
 
 client.on('ready', () => {
   // Initalize app channels.
@@ -153,10 +157,5 @@ require("fs").readdirSync('./triggers/').forEach(function(file) {
 data.readWarnings();
 data.readBans();
 
-if (config.clientLoginToken) {
-  client.login(config.clientLoginToken);
-  logger.info('Startup completed. Established connection to Discord.');
-} else {
-  logger.error('Cannot establish connection to Discord. Client login token is not defined.');
-  throw('MISSING_CLIENT_LOGIN_TOKEN');
-}
+client.login(config.clientLoginToken);
+logger.info('Startup completed. Established connection to Discord.');
