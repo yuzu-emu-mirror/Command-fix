@@ -2,7 +2,6 @@
 require('checkenv').check();
 
 const discord = require('discord.js');
-const fs = require('fs');
 const path = require('path');
 const schedule = require('node-schedule');
 
@@ -16,15 +15,15 @@ var cachedModules = [];
 var cachedTriggers = [];
 var client = new discord.Client();
 
-process.on('unhandledRejection', function onError(err) {
+process.on('unhandledRejection', function onError (err) {
   logger.error(err);
 });
 
-function findArray(haystack, arr) {
-    return arr.some(function (v) {
-        return haystack.indexOf(v) >= 0;
-    });
-};
+function findArray (haystack, arr) {
+  return arr.some(function (v) {
+    return haystack.indexOf(v) >= 0;
+  });
+}
 
 client.on('ready', () => {
   // Initalize app channels.
@@ -34,17 +33,17 @@ client.on('ready', () => {
   logger.info('Bot is now online and connected to server.');
 });
 
-client.on("guildMemberAdd", (member) => {
+client.on('guildMemberAdd', (member) => {
   app.stats.joins += 1;
 });
 
-client.on("guildMemberRemove", (member) => {
+client.on('guildMemberRemove', (member) => {
   app.stats.leaves += 1;
 });
 
 // Output the stats for app.stats every 24 hours.
 // Server is in UTC mode, 11:30 EST would be 03:30 UTC.
-schedule.scheduleJob({ hour: 3, minute: 30 }, function(){
+schedule.scheduleJob({ hour: 3, minute: 30 }, function () {
   logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
   app.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
 
@@ -55,7 +54,7 @@ schedule.scheduleJob({ hour: 3, minute: 30 }, function(){
 });
 
 client.on('message', message => {
-  if (message.author.bot && message.content.startsWith('.ban') == false) { return; }
+  if (message.author.bot && message.content.startsWith('.ban') === false) { return; }
 
   if (message.guild == null && responses.pmReply) {
     // We want to log PM attempts.
@@ -78,7 +77,7 @@ client.on('message', message => {
 
     if (cachedModule) {
       // Check access permissions.
-      if (cachedModule.roles != undefined && findArray(message.member.roles.map(function(x) { return x.name; }), cachedModule.roles) == false) {
+      if (cachedModule.roles !== undefined && findArray(message.member.roles.map(function (x) { return x.name; }), cachedModule.roles) === false) {
         app.logChannel.sendMessage(`${message.author} attempted to use admin command: ${message.content}`);
         logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
         return false;
@@ -88,9 +87,9 @@ client.on('message', message => {
       message.delete();
 
       try {
-        if (cachedModuleType == 'Command') {
+        if (cachedModuleType === 'Command') {
           cachedModule.command(message);
-        } else if (cachedModuleType == 'Quote') {
+        } else if (cachedModuleType === 'Quote') {
           cachedModules['quote.js'].command(message, cachedModule.reply);
         }
       } catch (err) { logger.error(err); }
@@ -98,39 +97,38 @@ client.on('message', message => {
       // Warn after running command?
       try {
         // Check if the command requires a warning.
-        if (cmd != 'warn' && cachedModule.warn == true) {
+        if (cmd !== 'warn' && cachedModule.warn === true) {
           // Access check to see if the user has privilages to warn.
           let warnCommand = cachedModules['warn.js'];
-          if (findArray(message.member.roles.map(function(x) { return x.name; }), warnCommand.roles)) {
+          if (findArray(message.member.roles.map(function (x) { return x.name; }), warnCommand.roles)) {
             // They are allowed to warn because they are in warn's roles.
             warnCommand.command(message);
           }
         }
       } catch (err) { logger.error(err); }
-
     } else {
       // Not a valid command.
     }
-  } else if (message.author.bot == false) {
+  } else if (message.author.bot === false) {
     // This is a normal channel message.
-    cachedTriggers.forEach(function(trigger) {
-        if (trigger.roles == undefined || findArray(message.member.roles.map(function(x) { return x.name; }), trigger.roles)) {
-          if (trigger.trigger(message) == true) {
-              logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
-              try {
-                trigger.execute(message);
-              } catch (err) { logger.error(err); }
-          }
+    cachedTriggers.forEach(function (trigger) {
+      if (trigger.roles === undefined || findArray(message.member.roles.map(function (x) { return x.name; }), trigger.roles)) {
+        if (trigger.trigger(message) === true) {
+          logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
+          try {
+            trigger.execute(message);
+          } catch (err) { logger.error(err); }
         }
+      }
     });
   }
 });
 
 // Cache all command modules.
 cachedModules = [];
-require("fs").readdirSync('./commands/').forEach(function(file) {
+require('fs').readdirSync('./commands/').forEach(function (file) {
   // Load the module if it's a script.
-  if (path.extname(file) == '.js') {
+  if (path.extname(file) === '.js') {
     if (file.includes('.disabled')) {
       logger.info(`Did not load disabled module: ${file}`);
     } else {
@@ -142,9 +140,9 @@ require("fs").readdirSync('./commands/').forEach(function(file) {
 
 // Cache all triggers.
 cachedTriggers = [];
-require("fs").readdirSync('./triggers/').forEach(function(file) {
+require('fs').readdirSync('./triggers/').forEach(function (file) {
   // Load the trigger if it's a script.
-  if (path.extname(file) == '.js') {
+  if (path.extname(file) === '.js') {
     if (file.includes('.disabled')) {
       logger.info(`Did not load disabled trigger: ${file}`);
     } else {
