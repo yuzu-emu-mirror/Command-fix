@@ -1,12 +1,16 @@
+// Check for environmental variables.
+require('checkenv').check();
+
 const discord = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const config = require('config');
 const schedule = require('node-schedule');
 
 const logger = require('./logging.js');
 const app = require('./app.js');
 const data = require('./data.js');
+
+var responses = require('./data/responses.json');
 
 var cachedModules = [];
 var cachedTriggers = [];
@@ -16,10 +20,6 @@ process.on('unhandledRejection', function onError(err) {
   logger.error(err);
 });
 
-// Verify configuration options are set properly.
-if (!config.logChannel) { throw 'Log Channel is missing from the configuration file.'; }
-if (!config.clientLoginToken) { throw 'Client Login Token is missing from the configuration file.'; }
-
 function findArray(haystack, arr) {
     return arr.some(function (v) {
         return haystack.indexOf(v) >= 0;
@@ -28,7 +28,7 @@ function findArray(haystack, arr) {
 
 client.on('ready', () => {
   // Initalize app channels.
-  app.logChannel = client.channels.get(config.logChannel);
+  app.logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);
   app.guild = app.logChannel.guild;
 
   logger.info('Bot is now online and connected to server.');
@@ -57,24 +57,24 @@ schedule.scheduleJob({ hour: 3, minute: 30 }, function(){
 client.on('message', message => {
   if (message.author.bot && message.content.startsWith('.ban') == false) { return; }
 
-  if (message.guild == null) {
+  if (message.guild == null && responses.pmReply) {
     // We want to log PM attempts.
     logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
     app.logChannel.sendMessage(`${message.author} [PM]: ${message.content}`);
-    message.reply(config.pmReply);
+    message.reply(responses.pmReply);
     return;
   }
 
   logger.verbose(`${message.author.username} ${message.author} [Channel: ${message.channel.name} ${message.channel}]: ${message.content}`);
 
-  if (message.content.startsWith(config.commandPrefix)) {
+  if (message.content.startsWith('.')) {
     let cmd = message.content.split(' ')[0].slice(1);
 
     // Check by the name of the command.
     let cachedModule = cachedModules[`${cmd}.js`];
     let cachedModuleType = 'Command';
     // Check by the quotes in the configuration.
-    if (cachedModule == null) { cachedModule = config.quotes[cmd]; cachedModuleType = 'Quote'; }
+    if (cachedModule == null) { cachedModule = responses.quotes[cmd]; cachedModuleType = 'Quote'; }
 
     if (cachedModule) {
       // Check access permissions.
@@ -157,5 +157,5 @@ require("fs").readdirSync('./triggers/').forEach(function(file) {
 data.readWarnings();
 data.readBans();
 
-client.login(config.clientLoginToken);
+client.login(process.env.DISCORD_LOGIN_TOKEN);
 logger.info('Startup completed. Established connection to Discord.');

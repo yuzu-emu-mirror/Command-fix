@@ -5,9 +5,9 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json package-lock.json ./
-RUN npm install --production
+RUN npm install
 
 # Bundle app source
 COPY . .
 
-ENTRYPOINT [ "npm", "run", "start-prod" ]
+ENTRYPOINT [ "node", "server.js" ]

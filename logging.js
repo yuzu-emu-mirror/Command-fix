@@ -1,43 +1,32 @@
-const config = require('config');
 const winston = require('winston');
-const logdna = require('logdna');
 const ip = require('ip');
 const os = require("os");
+const logdna = require('logdna');
 
 winston.emitErrs = true;
-const logger = new winston.Logger({
+
+var logger = new winston.Logger({
+    level: 'debug',
     transports: [
-        new winston.transports.File({
-            filename: 'log.log',
-            level: 'debug'
-        })
+        new (winston.transports.Console)(),
     ],
     handleExceptions: true,
     humanReadableUnhandledException: true,
     exitOnError: false,
-    meta: true,
+    meta: true
 });
 
-if (config.enableLogdnaLogging === true && config.logdnaKey) {
-    // Setup logging for LogDNA cloud logging.
+// Setup logging for LogDNA cloud logging.
+if (process.env.LOGDNA_API_KEY) {
     logger.add(winston.transports.Logdna, {
         level: 'info',
+        app: 'discord-bot',
         index_meta: true,
-        key: config.logdnaKey,
+        key: process.env.LOGDNA_API_KEY,
         ip: ip.address(),
-        hostname: os.hostname(),
-        app: config.app
+        hostname: os.hostname()
     });
-    logger.debug('[logging] Started LogDNA winston transport.');
-} else if (config.enableLogdna === true) {
-    throw "Attempted to enable LogDNA transport without a key!";
-}
-
-if (config.enableConsoleLogging === true) {
-    logger.add(winston.transports.Console, {
-        level: 'silly',
-        colorize: true
-    });
+    logger.info('Started LogDNA winston transport.');
 }
 
 module.exports = logger;
