@@ -66,7 +66,8 @@ client.on('message', message => {
 
   logger.verbose(`${message.author.username} ${message.author} [Channel: ${message.channel.name} ${message.channel}]: ${message.content}`);
 
-  if (message.content.startsWith('.')) {
+  // We want to make sure it's an actual command, not someone '...'-ing.
+  if (message.content.startsWith('.') && message.content.startsWith('..') === false) {
     let cmd = message.content.split(' ')[0].slice(1);
 
     // Check by the name of the command.
