@@ -1,5 +1,5 @@
 /* Application State */
-var Application = function () {
+var State = function () {
   this.guild = null;
   this.logChannel = null;
   this.warnings = [];
@@ -11,4 +11,4 @@ var Application = function () {
   };
 };
 
-module.exports = new Application();
+module.exports = new State();

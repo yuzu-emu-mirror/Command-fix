@@ -1,8 +1,5 @@
-var app = require('../app.js');
-var logger = require('../logging.js');
-
 exports.roles = ['Admins', 'Moderators', 'CitraBot'];
-exports.command = function(message) {
+exports.command = function (message) {
   var role = '345247291843805185';
   message.mentions.users.map((user) => {
     let member = message.guild.member(user);

@@ -1,5 +1,5 @@
-class UserBan {
-  constructor(id, username, warnedBy, warnedByUsername, priorWarnings) {
+class UserWarning {
+  constructor (id, username, warnedBy, warnedByUsername, priorWarnings) {
     this.id = id;
     this.username = username;
     this.date = new Date();
@@ -9,4 +9,4 @@ class UserBan {
   }
 }
 
-module.exports = UserBan;
+module.exports = UserWarning;

@@ -4,12 +4,13 @@ require('checkenv').check();
 const discord = require('discord.js');
 const path = require('path');
 const schedule = require('node-schedule');
+const fs = require('fs');
 
 const logger = require('./logging.js');
-const app = require('./app.js');
+const state = require('./state.js');
 const data = require('./data.js');
 
-var responses = require('./data/responses.json');
+var responses = require('./responses.json');
 
 var cachedModules = [];
 var cachedTriggers = [];
@@ -27,30 +28,30 @@ function findArray (haystack, arr) {
 
 client.on('ready', () => {
   // Initalize app channels.
-  app.logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);
-  app.guild = app.logChannel.guild;
+  state.logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);
+  state.guild = state.logChannel.guild;
 
   logger.info('Bot is now online and connected to server.');
 });
 
 client.on('guildMemberAdd', (member) => {
-  app.stats.joins += 1;
+  state.stats.joins += 1;
 });
 
 client.on('guildMemberRemove', (member) => {
-  app.stats.leaves += 1;
+  state.stats.leaves += 1;
 });
 
-// Output the stats for app.stats every 24 hours.
+// Output the stats for state.stats every 24 hours.
 // Server is in UTC mode, 11:30 EST would be 03:30 UTC.
 schedule.scheduleJob({ hour: 3, minute: 30 }, function () {
-  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
-  app.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${app.stats.joins} users have joined, ${app.stats.leaves} users have left, ${app.stats.warnings} warnings have been issued.`);
+  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  state.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
 
   // Clear the stats for the day.
-  app.stats.joins = 0;
-  app.stats.leaves = 0;
-  app.stats.warnings = 0;
+  state.stats.joins = 0;
+  state.stats.leaves = 0;
+  state.stats.warnings = 0;
 });
 
 client.on('message', message => {
@@ -59,7 +60,7 @@ client.on('message', message => {
   if (message.guild == null && responses.pmReply) {
     // We want to log PM attempts.
     logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
-    app.logChannel.sendMessage(`${message.author} [PM]: ${message.content}`);
+    state.logChannel.sendMessage(`${message.author} [PM]: ${message.content}`);
     message.reply(responses.pmReply);
     return;
   }
@@ -79,7 +80,7 @@ client.on('message', message => {
     if (cachedModule) {
       // Check access permissions.
       if (cachedModule.roles !== undefined && findArray(message.member.roles.map(function (x) { return x.name; }), cachedModule.roles) === false) {
-        app.logChannel.sendMessage(`${message.author} attempted to use admin command: ${message.content}`);
+        state.logChannel.sendMessage(`${message.author} attempted to use admin command: ${message.content}`);
         logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
         return false;
       }
@@ -127,7 +128,7 @@ client.on('message', message => {
 
 // Cache all command modules.
 cachedModules = [];
-require('fs').readdirSync('./commands/').forEach(function (file) {
+fs.readdirSync('./src/commands/').forEach(function (file) {
   // Load the module if it's a script.
   if (path.extname(file) === '.js') {
     if (file.includes('.disabled')) {
@@ -141,7 +142,7 @@ require('fs').readdirSync('./commands/').forEach(function (file) {
 
 // Cache all triggers.
 cachedTriggers = [];
-require('fs').readdirSync('./triggers/').forEach(function (file) {
+fs.readdirSync('./src/triggers/').forEach(function (file) {
   // Load the trigger if it's a script.
   if (path.extname(file) === '.js') {
     if (file.includes('.disabled')) {
