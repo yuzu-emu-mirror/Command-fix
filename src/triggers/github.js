@@ -24,11 +24,18 @@ exports.execute = function (message) {
     // in general conversation.
     // ex: You're #1!
     if (match[1] <= 2000) { return; }
+    
+    // Map domain path to type
+    let map = {'pull': 'Pull Request', 'issues': 'Issue'};
 
     let url = `https://github.com/citra-emu/citra/pull/${match[1]}`;
     request(url, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        message.channel.sendMessage(`Github Pull Request: ${url}`);
+        
+        // Set path to type of comment (issues/pull)
+        let path = response.request.uri.pathname.split('/')[3];
+        
+        message.channel.sendMessage(`Github ${map[path]}: ${url}`);
       }
     });
 
