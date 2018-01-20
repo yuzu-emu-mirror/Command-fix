@@ -16,8 +16,14 @@ var cachedModules = [];
 var cachedTriggers = [];
 var client = new discord.Client();
 
-process.on('unhandledRejection', function onError (err) {
-  logger.error(err);
+logger.info('Application startup. Configuring environment.');
+
+process.on('unhandledRejection', (error, promise) => {
+	logger.error(`Unhandled promise rejection: ${error.message}.`, error);
+});
+
+process.on('uncaughtException', error => {
+	logger.error(`Unhandled exception: ${error.message}.`, error);
 });
 
 function findArray (haystack, arr) {

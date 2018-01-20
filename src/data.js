@@ -4,9 +4,8 @@ const logger = require('./logging.js');
 
 function readWarnings () {
   // Load the warnings file into the bans variable.
-  fs.readFile('data/discordWarnings.json', 'utf8', function (err, data) {
-    if (err && err.code === 'ENOENT') { return; }
-    if (err) { logger.error(err); }
+  fs.readFile('/data/discordWarnings.json', 'utf8', function (err, data) {
+    if (err) { throw err; }
     state.warnings = JSON.parse(data);
     logger.debug('Loaded warnings file.');
   });
@@ -14,9 +13,8 @@ function readWarnings () {
 
 function readBans () {
   // Load the ban file into the bans variable.
-  fs.readFile('data/discordBans.json', 'utf8', function (err, data) {
-    if (err && err.code === 'ENOENT') { return; }
-    if (err) { logger.error(err); }
+  fs.readFile('/data/discordBans.json', 'utf8', function (err, data) {
+    if (err) { throw err; }
     state.bans = JSON.parse(data);
     logger.debug('Loaded bans file.');
   });
@@ -25,18 +23,17 @@ function readBans () {
 function readCustomResponses()
 {
   // Load the responses file into the responses variable.
-  fs.readFile('data/responses.json', 'utf8', function (err, data) {
-    if (err && err.code === 'ENOENT') { return; }
-    if (err) { logger.error(err); }
+  fs.readFile('/data/responses.json', 'utf8', function (err, data) {
+    if (err) { throw err; }
     state.responses = JSON.parse(data);
-    logger.debug('Loaded responses file.');
+    logger.debug('Loaded responses file from external source.');
   });
 }
 
 function flushWarnings () {
   var warningsJson = JSON.stringify(state.warnings, null, 4);
   if (!fs.existsSync('./data/')) fs.mkdirSync('data');
-  fs.writeFile('data/discordWarnings.json', warningsJson, 'utf8', function (err) {
+  fs.writeFile('/data/discordWarnings.json', warningsJson, 'utf8', function (err) {
     if (err) { logger.error(err); }
   });
 }
@@ -44,7 +41,7 @@ function flushWarnings () {
 function flushBans () {
   var bansJson = JSON.stringify(state.bans, null, 4);
   if (!fs.existsSync('data')) fs.mkdirSync('data');
-  fs.writeFile('data/discordBans.json', bansJson, 'utf8', function (err) {
+  fs.writeFile('/data/discordBans.json', bansJson, 'utf8', function (err) {
     if (err) { logger.error(err); }
   });
 }
