@@ -7,6 +7,7 @@ var State = function () {
   this.bans = [];
   this.stats = {
     joins: 0,
+    ruleAccepts: 0,
     leaves: 0,
     warnings: 0
   };

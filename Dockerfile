@@ -4,8 +4,8 @@ FROM mhart/alpine-node:latest
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package.json ./
+RUN yarn install
 
 # Bundle app source
 COPY . .

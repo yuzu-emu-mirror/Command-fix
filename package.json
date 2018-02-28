@@ -10,7 +10,7 @@
   "license": "GPL-2.0+",
   "dependencies": {
     "checkenv": "^1.2.2",
-    "discord.js": "^10.0.1",
+    "discord.js": "^11.3.0",
     "ip": "^1.1.5",
     "logdna": "^1.2.3",
     "node-schedule": "^1.2.3",

@@ -26,7 +26,7 @@ process.on('uncaughtException', error => {
 	logger.error(`Unhandled exception: ${error.message}.`, error);
 });
 
-function findArray (haystack, arr) {
+function findArray(haystack, arr) {
   return arr.some(function (v) {
     return haystack.indexOf(v) >= 0;
   });
@@ -41,6 +41,7 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberAdd', (member) => {
+  member.addRole(process.env.DISCORD_RULES_ROLE);
   state.stats.joins += 1;
 });
 
@@ -51,11 +52,12 @@ client.on('guildMemberRemove', (member) => {
 // Output the stats for state.stats every 24 hours.
 // Server is in UTC mode, 11:30 EST would be 03:30 UTC.
 schedule.scheduleJob({ hour: 3, minute: 30 }, function () {
-  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
-  state.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  state.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
 
   // Clear the stats for the day.
   state.stats.joins = 0;
+  state.stats.ruleAccepts = 0;
   state.stats.leaves = 0;
   state.stats.warnings = 0;
 });
@@ -73,8 +75,21 @@ client.on('message', message => {
 
   logger.verbose(`${message.author.username} ${message.author} [Channel: ${message.channel.name} ${message.channel}]: ${message.content}`);
 
-  // We want to make sure it's an actual command, not someone '...'-ing.
-  if (message.content.startsWith('.') && message.content.startsWith('..') === false) {
+  // Check if the channel is #rules, if so we want to follow a different logic flow.
+  if (message.channel.id === process.env.DISCORD_RULES_CHANNEL) {
+    if (message.content.includes(process.env.DISCORD_RULES_TRIGGER)) {
+      // We want to remove the 'Unauthorized' role from them once they agree to the rules.
+      logger.verbose(`${message.author.username} ${message.author} has accepted the rules, removing role ${process.env.DISCORD_RULES_ROLE}.`);
+      state.stats.ruleAccepts += 1;
+
+      message.member.removeRole(process.env.DISCORD_RULES_ROLE, 'Accepted the rules.');
+    }
+
+    // Delete the message in the channel to force a cleanup.
+    message.delete();
+    return;
+  } else if (message.content.startsWith('.') && message.content.startsWith('..') === false) {
+    // We want to make sure it's an actual command, not someone '...'-ing.
     let cmd = message.content.split(' ')[0].slice(1);
 
     // Check by the name of the command.
@@ -164,9 +179,8 @@ data.readWarnings();
 data.readBans();
 
 // Load custom responses
-if (process.env.DATA_CUSTOM_RESPONSES)
-{
-    data.readCustomResponses();
+if (process.env.DATA_CUSTOM_RESPONSES) {
+  data.readCustomResponses();
 }
 
 client.login(process.env.DISCORD_LOGIN_TOKEN);
