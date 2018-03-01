@@ -35,7 +35,7 @@ exports.execute = function (message) {
         // Set path to type of comment (issues/pull)
         let path = response.request.uri.pathname.split('/')[3];
         
-        message.channel.sendMessage(`Github ${map[path]}: ${url}`);
+        message.channel.send(`Github ${map[path]}: ${url}`);
       }
     });
 
