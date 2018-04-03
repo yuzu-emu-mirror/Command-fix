@@ -8,22 +8,15 @@ const fs = require('fs');
 
 const logger = require('./logging.js');
 const state = require('./state.js');
+const data = require('./data.js');
 
-// Load custom responses
-if (process.env.DATA_CUSTOM_RESPONSES) {
-  fs.readFile('/data/responses.json', 'utf8', function (err, data) {
-    if (err) { throw err; }
-    state.responses = JSON.parse(data);
-    logger.debug('Loaded responses file from external source.');
-  });
-} else {
-  state.responses = require('./responses.json');
-  logger.warn(`Loaded resources file from the default, no external source found.`);
-}
+state.responses = require('./responses.json');
 
 var cachedModules = [];
 var cachedTriggers = [];
 var client = new discord.Client();
+
+logger.info('Application startup. Configuring environment.');
 
 process.on('unhandledRejection', (error, promise) => {
 	logger.error(`Unhandled promise rejection: ${error.message}.`, error);
@@ -59,15 +52,14 @@ client.on('guildMemberRemove', (member) => {
 // Output the stats for state.stats every 24 hours.
 // Server is in UTC mode, 11:30 EST would be 03:30 UTC.
 schedule.scheduleJob({ hour: 3, minute: 30 }, function () {
-  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left.`, {
-    meta: { stats: state.stats }
-  });
-  state.logChannel.send(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left.`);
+  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  state.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
 
   // Clear the stats for the day.
   state.stats.joins = 0;
   state.stats.ruleAccepts = 0;
   state.stats.leaves = 0;
+  state.stats.warnings = 0;
 });
 
 client.on('message', message => {
@@ -76,7 +68,7 @@ client.on('message', message => {
   if (message.guild == null && state.responses.pmReply) {
     // We want to log PM attempts.
     logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
-    state.logChannel.send(`${message.author} [PM]: ${message.content}`);
+    state.logChannel.sendMessage(`${message.author} [PM]: ${message.content}`);
     message.reply(state.responses.pmReply);
     return;
   }
@@ -109,7 +101,7 @@ client.on('message', message => {
     if (cachedModule) {
       // Check access permissions.
       if (cachedModule.roles !== undefined && findArray(message.member.roles.map(function (x) { return x.name; }), cachedModule.roles) === false) {
-        state.logChannel.send(`${message.author} attempted to use admin command: ${message.content}`);
+        state.logChannel.sendMessage(`${message.author} attempted to use admin command: ${message.content}`);
         logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
         return false;
       }
@@ -124,6 +116,21 @@ client.on('message', message => {
           cachedModules['quote.js'].command(message, cachedModule.reply);
         }
       } catch (err) { logger.error(err); }
+
+      // Warn after running command?
+      try {
+        // Check if the command requires a warning.
+        if (cmd !== 'warn' && cachedModule.warn === true) {
+          // Access check to see if the user has privilages to warn.
+          let warnCommand = cachedModules['warn.js'];
+          if (findArray(message.member.roles.map(function (x) { return x.name; }), warnCommand.roles)) {
+            // They are allowed to warn because they are in warn's roles.
+            warnCommand.command(message);
+          }
+        }
+      } catch (err) { logger.error(err); }
+    } else {
+      // Not a valid command.
     }
   } else if (message.author.bot === false) {
     // This is a normal channel message.
@@ -167,6 +174,14 @@ fs.readdirSync('./src/triggers/').forEach(function (file) {
     }
   }
 });
+
+data.readWarnings();
+data.readBans();
+
+// Load custom responses
+if (process.env.DATA_CUSTOM_RESPONSES) {
+  data.readCustomResponses();
+}
 
 client.login(process.env.DISCORD_LOGIN_TOKEN);
 logger.info('Startup completed. Established connection to Discord.');

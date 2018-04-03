@@ -7,5 +7,5 @@ exports.command = function (message, reply) {
     replyMessage = `${message.mentions.users.map(user => `${user}`)} ${reply}`;
   }
 
-  message.channel.send(replyMessage);
+  message.channel.sendMessage(replyMessage);
 };
