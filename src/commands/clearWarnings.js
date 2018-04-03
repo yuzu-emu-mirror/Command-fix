@@ -9,12 +9,12 @@ exports.command = function (message) {
     if (count != null && count.length > 0) {
       count.forEach(warning => { warning.cleared = true; });
       data.flushWarnings();
-      message.channel.sendMessage(`${user}, your warnings have been cleared.`);
+      message.channel.send(`${user}, your warnings have been cleared.`);
     } else {
-      message.channel.sendMessage(`${user}, you have no warnings to clear.`);
+      message.channel.send(`${user}, you have no warnings to clear.`);
     }
 
     logger.info(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count}].`);
-    state.logChannel.sendMessage(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count}].`);
+    state.logChannel.send(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count}].`);
   });
 };

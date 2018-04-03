@@ -53,7 +53,7 @@ client.on('guildMemberRemove', (member) => {
 // Server is in UTC mode, 11:30 EST would be 03:30 UTC.
 schedule.scheduleJob({ hour: 3, minute: 30 }, function () {
   logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
-  state.logChannel.sendMessage(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  state.logChannel.send(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
 
   // Clear the stats for the day.
   state.stats.joins = 0;
@@ -68,7 +68,7 @@ client.on('message', message => {
   if (message.guild == null && state.responses.pmReply) {
     // We want to log PM attempts.
     logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
-    state.logChannel.sendMessage(`${message.author} [PM]: ${message.content}`);
+    state.logChannel.send(`${message.author} [PM]: ${message.content}`);
     message.reply(state.responses.pmReply);
     return;
   }
@@ -101,7 +101,7 @@ client.on('message', message => {
     if (cachedModule) {
       // Check access permissions.
       if (cachedModule.roles !== undefined && findArray(message.member.roles.map(function (x) { return x.name; }), cachedModule.roles) === false) {
-        state.logChannel.sendMessage(`${message.author} attempted to use admin command: ${message.content}`);
+        state.logChannel.send(`${message.author} attempted to use admin command: ${message.content}`);
         logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
         return false;
       }

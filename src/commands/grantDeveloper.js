@@ -7,10 +7,10 @@ exports.command = function (message) {
 
     if (alreadyJoined) {
       member.removeRole(role);
-      message.channel.sendMessage(`${user}'s speech has been revoked in the #development channel.`);
+      message.channel.send(`${user}'s speech has been revoked in the #development channel.`);
     } else {
       member.addRole(role);
-      message.channel.sendMessage(`${user} has been granted speech in the #development channel.`);
+      message.channel.send(`${user} has been granted speech in the #development channel.`);
     }
   });
 }
