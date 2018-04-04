@@ -19,11 +19,12 @@ var client = new discord.Client();
 logger.info('Application startup. Configuring environment.');
 
 process.on('unhandledRejection', (error, promise) => {
-	logger.error(`Unhandled promise rejection: ${error.message}.`, error);
+	logger.error(`Unhandled promise rejection: ${error.message}.`, { meta: error });
 });
 
 process.on('uncaughtException', error => {
-	logger.error(`Unhandled exception: ${error.message}.`, error);
+  logger.error(`Unhandled exception: ${error.message}.`, { meta: error });
+  process.exit(-1);
 });
 
 function findArray(haystack, arr) {
