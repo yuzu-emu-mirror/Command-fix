@@ -1,11 +1,10 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const state = require('./state.js');
 const logger = require('./logging.js');
 
 function readWarnings() {
   // Load the warnings file into the application state.
   var readFilePath = '/data/discordWarnings.json';
-  fs.ensureFileSync(readFilePath);
   fs.readFile(readFilePath, 'utf8', function (err, data) {
     if (err) { throw err; }
     if (data) {
@@ -20,7 +19,6 @@ function readWarnings() {
 function readBans() {
   // Load the ban file into the application state.
   var readFilePath = '/data/discordBans.json';
-  fs.ensureFileSync(readFilePath);
   fs.readFile(readFilePath, 'utf8', function (err, data) {
     if (err) { throw err; }
     if (data) {
@@ -35,8 +33,6 @@ function readBans() {
 function readCustomResponses() {
   // Load the responses file into the responses variable.
   var readFilePath = '/data/responses.json';
-  fs.ensureFileSync(readFilePath);
-
   fs.readFile(readFilePath, 'utf8', function (err, data) {
     if (err) { throw err; }
     if (data) {
