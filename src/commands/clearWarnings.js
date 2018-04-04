@@ -14,7 +14,7 @@ exports.command = function (message) {
       message.channel.send(`${user}, you have no warnings to clear.`);
     }
 
-    logger.info(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count}].`);
-    state.logChannel.send(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count}].`);
+    logger.info(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count.length}].`);
+    state.logChannel.send(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count.length}].`);
   });
 };

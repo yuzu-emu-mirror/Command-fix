@@ -8,7 +8,7 @@ exports.command = function (message) {
   message.mentions.users.map((user) => {
     var count = state.warnings.filter(x => x.id === user.id && !x.cleared).length || 0;
 
-    message.channel.send(`${user} ${user.username}, You will now be banned from this channel.`);
+    message.channel.send(`${user}, You will now be banned from this server.`);
     logger.info(`${message.author.toString()} has banned ${user.toString()} ${user} ${user.username}.`);
     state.logChannel.send(`${message.author} has banned ${user} ${user.username} [${count}].`);
 

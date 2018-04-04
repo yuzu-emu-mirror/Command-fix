@@ -18,7 +18,7 @@ exports.command = function (message) {
     state.stats.warnings += 1;
 
     if (count + 1 >= 3) {
-      state.logChannel.send(`.ban ${user}`);
+      message.channel.send(`.ban ${user}`);
     }
   });
 };
