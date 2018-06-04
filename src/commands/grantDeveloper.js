@@ -1,6 +1,6 @@
 exports.roles = ['Admins', 'Moderators', 'CitraBot'];
 exports.command = function (message) {
-  var role = '345247291843805185';
+  var role = process.env.DISCORD_DEVELOPER_ROLE
   message.mentions.users.map((user) => {
     let member = message.guild.member(user);
     let alreadyJoined = member.roles.has(role);
