@@ -11,6 +11,9 @@ var State = function () {
     leaves: 0,
     warnings: 0
   };
+  this.lastGameDBUpdate = 0;
+  this.gameDB = [];
+  this.gameDBPromise = null;
 };
 
 module.exports = new State();
