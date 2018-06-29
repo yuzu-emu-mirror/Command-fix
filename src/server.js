@@ -164,17 +164,6 @@ fs.readdirSync('./src/commands/').forEach(function (file) {
 
 // Cache all triggers.
 cachedTriggers = [];
-fs.readdirSync('./src/triggers/').forEach(function (file) {
-  // Load the trigger if it's a script.
-  if (path.extname(file) === '.js') {
-    if (file.includes('.disabled')) {
-      logger.info(`Did not load disabled trigger: ${file}`);
-    } else {
-      logger.info(`Loaded trigger: ${file}`);
-      cachedTriggers.push(require(`./triggers/${file}`));
-    }
-  }
-});
 
 data.readWarnings();
 data.readBans();
