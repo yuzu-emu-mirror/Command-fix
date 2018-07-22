@@ -53,8 +53,8 @@ client.on('guildMemberRemove', (member) => {
 // Output the stats for state.stats every 24 hours.
 // Server is in UTC mode, 11:30 EST would be 03:30 UTC.
 schedule.scheduleJob({ hour: 3, minute: 30 }, function () {
-  logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
-  state.logChannel.send(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  // logger.info(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
+  // state.logChannel.send(`Here are today's stats for ${(new Date()).toLocaleDateString()}! ${state.stats.joins} users have joined, ${state.stats.ruleAccepts} users have accepted the rules, ${state.stats.leaves} users have left, ${state.stats.warnings} warnings have been issued.`);
 
   // Clear the stats for the day.
   state.stats.joins = 0;
