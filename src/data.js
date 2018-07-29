@@ -32,7 +32,7 @@ function readBans() {
 
 function readCustomResponses() {
   // Load the responses file into the responses variable.
-  state.responses  = require(`./${process.env.TENANT}.json`);
+  state.responses  = require(`./responses/${process.env.TENANT}.json`);
   logger.debug(`Loaded responses file for ${process.env.TENANT} from external source.`);
 }
 
