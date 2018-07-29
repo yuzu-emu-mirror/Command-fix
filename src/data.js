@@ -32,12 +32,12 @@ function readBans() {
 
 function readCustomResponses() {
   // Load the responses file into the responses variable.
-  var readFilePath = '/data/responses.json';
+  var readFilePath = `./responses/${process.env.TENANT}.json`;
   fs.readFile(readFilePath, 'utf8', function (err, data) {
     if (err) { throw err; }
     if (data) {
       state.responses = JSON.parse(data);
-      logger.debug('Loaded responses file from external source.');
+      logger.debug(`Loaded responses file for ${process.env.TENANT} from external source.`);
     } else {
       logger.warn(`${readFilePath} appears to be an empty file.`);
     }
