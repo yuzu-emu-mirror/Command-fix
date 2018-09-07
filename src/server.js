@@ -41,6 +41,24 @@ client.on('ready', () => {
   logger.info('Bot is now online and connected to server.');
 });
 
+client.on('error', (x) => {
+	logger.error(x)
+	logger.error('Restarting process.')
+	process.exit(1)
+})
+client.on('warn', (x) => {
+	logger.warn(x)
+})
+
+client.on('debug', (x) => null)
+
+client.on('disconnect', () => {
+	logger.warn('Disconnected from Discord server.');
+})
+client.on('reconnecting', () => {
+	logger.warn('Reconnecting...');
+})
+
 client.on('guildMemberAdd', (member) => {
   member.addRole(process.env.DISCORD_RULES_ROLE);
   state.stats.joins += 1;
