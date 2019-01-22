@@ -48,7 +48,7 @@ exports.command = async function (message) {
     try {
       await state.gameDBPromise;
     } catch (e) {
-      message.channel.send("Game compatibility feed temporarily unavailable - sorry!");
+      message.channel.send("Game compatibility feed temporarily unavailable.");
       throw e;
     } finally {
       // We don't need this message anymore
@@ -82,11 +82,9 @@ exports.command = async function (message) {
 
   const embed = new discord.RichEmbed()
     .addField("Status", compat.name, true)
-    .addField("Needs System Files", bestGame.needs_system_files ? "Yes" : "No", true)
-    .addField("Needs Shared Font", bestGame.needs_shared_font ? "Yes" : "No", true)
     .setTitle(bestGame.title)
     .setColor(compat.color)
-    .setDescription(bestGame.description)
+    .setDescription(compat.description)
     .setURL(url)
     .setThumbnail(screenshot);
 
