@@ -29,7 +29,14 @@ async function updateDatabase() {
     throw e;
   }
 
-  state.gameDB = JSON.parse(body);
+  state.gameDB = JSON.parse(body).map(x => {
+    return {
+      directory: x.directory,
+      title: x.title,
+      compatibility: x.compatibility
+    }
+  });
+
   state.lastGameDBUpdate = Date.now();
   logger.info(`Updated games list (${state.gameDB.length} games)`);
 
@@ -75,8 +82,8 @@ exports.command = async function (message) {
     return;
   }
 
-  const screenshot = `${iconBase}${bestGame.id}.png`;
-  const url = `${urlBase}${bestGame.id}/`;
+  const screenshot = `${iconBase}${bestGame.directory}.png`;
+  const url = `${urlBase}${bestGame.directory}/`;
 
   const compat = compatStrings[bestGame.compatibility];
 
