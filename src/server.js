@@ -96,7 +96,7 @@ client.on('message', message => {
 
   // Check if the channel is #rules, if so we want to follow a different logic flow.
   if (message.channel.id === process.env.DISCORD_RULES_CHANNEL) {
-    if (message.content.includes(process.env.DISCORD_RULES_TRIGGER)) {
+    if (message.content.toLowerCase().includes(process.env.DISCORD_RULES_TRIGGER)) {
       // We want to remove the 'Unauthorized' role from them once they agree to the rules.
       logger.verbose(`${message.author.username} ${message.author} has accepted the rules, removing role ${process.env.DISCORD_RULES_ROLE}.`);
       state.stats.ruleAccepts += 1;
