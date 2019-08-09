@@ -2,6 +2,7 @@
 const State = function () {
   this.guild = null;
   this.logChannel = null;
+  this.msglogChannel = null;
   this.warnings = [];
   this.responses = null;
   this.bans = [];
