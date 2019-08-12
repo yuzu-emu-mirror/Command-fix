@@ -35,6 +35,11 @@ function findArray (haystack, arr) {
   });
 }
 
+function IsIgnoredChannel (channelName) {
+  const IgnoredChannels = ['welcome', 'announcements', 'media'];
+  return IgnoredChannels.includes(channelName);
+}
+
 client.on('ready', () => {
   // Initialize app channels.
   state.logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);
@@ -67,34 +72,38 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('messageDelete', message => {
-  if (Boolean(message.content) && !message.content.startsWith('.')) {
-    const deletionEmbed = new discord.RichEmbed()
-      .setAuthor(message.author.tag, message.author.displayAvatarURL)
-      .setDescription(`Message deleted in ${message.channel}`)
-      .addField('Content', message.cleanContent, false)
-      .setTimestamp()
-      .setColor('RED');
+  if (IsIgnoredChannel(message.channel.name) == false) {
+    if (message.content && message.content.startsWith('.') == false && message.author.bot == false) {
+      const deletionEmbed = new discord.RichEmbed()
+        .setAuthor(message.author.tag, message.author.displayAvatarURL)
+        .setDescription(`Message deleted in ${message.channel}`)
+        .addField('Content', message.cleanContent, false)
+        .setTimestamp()
+        .setColor('RED');
 
-    state.msglogChannel.send(deletionEmbed);
-    logger.info(`${message.author.username} ${message.author} deleted message: ${message.cleanContent}.`);
+      state.msglogChannel.send(deletionEmbed);
+      logger.info(`${message.author.username} ${message.author} deleted message: ${message.cleanContent}.`);
+    }
   }
 });
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
-  const oldM = oldMessage.cleanContent;
-  const newM = newMessage.cleanContent;
+  if (IsIgnoredChannel(oldMessage.channel.name) == false) {
+    const oldM = oldMessage.cleanContent;
+    const newM = newMessage.cleanContent;
 
-  if (Boolean(oldM) && Boolean(newM)) {
-    const editedEmbed = new discord.RichEmbed()
-      .setAuthor(oldMessage.author.tag, oldMessage.author.displayAvatarURL)
-      .setDescription(`Message edited in ${oldMessage.channel} [Jump To Message](${newMessage.url})`)
-      .addField('Before', oldM, false)
-      .addField('After', newM, false)
-      .setTimestamp()
-      .setColor('GREEN');
+    if (oldM && newM) {
+      const editedEmbed = new discord.RichEmbed()
+        .setAuthor(oldMessage.author.tag, oldMessage.author.displayAvatarURL)
+        .setDescription(`Message edited in ${oldMessage.channel} [Jump To Message](${newMessage.url})`)
+        .addField('Before', oldM, false)
+        .addField('After', newM, false)
+        .setTimestamp()
+        .setColor('GREEN');
 
-    state.msglogChannel.send(editedEmbed);
-    logger.info(`${oldMessage.author.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
+      state.msglogChannel.send(editedEmbed);
+      logger.info(`${oldMessage.author.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
+    }
   }
 });
 
