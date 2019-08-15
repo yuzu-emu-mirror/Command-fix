@@ -35,9 +35,15 @@ function findArray (haystack, arr) {
   });
 }
 
+function IsIgnoredChannel (channelName) {
+  const IgnoredChannels = ['welcome', 'announcements', 'media'];
+  return IgnoredChannels.includes(channelName);
+}
+
 client.on('ready', () => {
   // Initialize app channels.
   state.logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);
+  state.msglogChannel = client.channels.get(process.env.DISCORD_MSGLOG_CHANNEL);
   state.guild = state.logChannel.guild;
 
   logger.info('Bot is now online and connected to server.');
@@ -63,6 +69,42 @@ client.on('reconnecting', () => {
 
 client.on('guildMemberAdd', (member) => {
   member.addRole(process.env.DISCORD_RULES_ROLE);
+});
+
+client.on('messageDelete', message => {
+  if (IsIgnoredChannel(message.channel.name) == false) {
+    if (message.content && message.content.startsWith('.') == false && message.author.bot == false) {
+      const deletionEmbed = new discord.RichEmbed()
+        .setAuthor(message.author.tag, message.author.displayAvatarURL)
+        .setDescription(`Message deleted in ${message.channel}`)
+        .addField('Content', message.cleanContent, false)
+        .setTimestamp()
+        .setColor('RED');
+
+      state.msglogChannel.send(deletionEmbed);
+      logger.info(`${message.author.username} ${message.author} deleted message: ${message.cleanContent}.`);
+    }
+  }
+});
+
+client.on('messageUpdate', (oldMessage, newMessage) => {
+  if (IsIgnoredChannel(oldMessage.channel.name) == false) {
+    const oldM = oldMessage.cleanContent;
+    const newM = newMessage.cleanContent;
+
+    if (oldM && newM) {
+      const editedEmbed = new discord.RichEmbed()
+        .setAuthor(oldMessage.author.tag, oldMessage.author.displayAvatarURL)
+        .setDescription(`Message edited in ${oldMessage.channel} [Jump To Message](${newMessage.url})`)
+        .addField('Before', oldM, false)
+        .addField('After', newM, false)
+        .setTimestamp()
+        .setColor('GREEN');
+
+      state.msglogChannel.send(editedEmbed);
+      logger.info(`${oldMessage.author.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
+    }
+  }
 });
 
 client.on('message', message => {
