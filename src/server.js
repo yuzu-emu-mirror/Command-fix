@@ -35,9 +35,9 @@ function findArray (haystack, arr) {
   });
 }
 
-function IsIgnoredChannel (channelName) {
-  const IgnoredChannels = ['welcome', 'announcements', 'media'];
-  return IgnoredChannels.includes(channelName);
+function IsIgnoredCategory (categoryName) {
+  const IgnoredCategory = ['welcome', 'team', 'website-team'];
+  return IgnoredCategory.includes(categoryName);
 }
 
 client.on('ready', () => {
@@ -72,7 +72,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('messageDelete', message => {
-  if (IsIgnoredChannel(message.channel.name) == false) {
+  if (IsIgnoredCategory(message.channel.parent.name) == false) {
     if (message.content && message.content.startsWith('.') == false && message.author.bot == false) {
       const deletionEmbed = new discord.RichEmbed()
         .setAuthor(message.author.tag, message.author.displayAvatarURL)
@@ -88,21 +88,23 @@ client.on('messageDelete', message => {
 });
 
 client.on('messageUpdate', (oldMessage, newMessage) => {
-  if (IsIgnoredChannel(oldMessage.channel.name) == false) {
-    const oldM = oldMessage.cleanContent;
-    const newM = newMessage.cleanContent;
+  const AllowedRoles = ['Administrators', 'Moderators', 'Team', 'VIP'];
+  if (!findArray(oldMessage.member.roles.map(function (x) { return x.name; }), AllowedRoles)) {
+    if (IsIgnoredCategory(oldMessage.channel.parent.name) == false) {
+      const oldM = oldMessage.cleanContent;
+      const newM = newMessage.cleanContent;
+      if (oldMessage.content != newMessage.content && oldM && newM) {
+        const editedEmbed = new discord.RichEmbed()
+          .setAuthor(oldMessage.author.tag, oldMessage.author.displayAvatarURL)
+          .setDescription(`Message edited in ${oldMessage.channel} [Jump To Message](${newMessage.url})`)
+          .addField('Before', oldM, false)
+          .addField('After', newM, false)
+          .setTimestamp()
+          .setColor('GREEN');
 
-    if (oldM && newM) {
-      const editedEmbed = new discord.RichEmbed()
-        .setAuthor(oldMessage.author.tag, oldMessage.author.displayAvatarURL)
-        .setDescription(`Message edited in ${oldMessage.channel} [Jump To Message](${newMessage.url})`)
-        .addField('Before', oldM, false)
-        .addField('After', newM, false)
-        .setTimestamp()
-        .setColor('GREEN');
-
-      state.msglogChannel.send(editedEmbed);
-      logger.info(`${oldMessage.author.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
+        state.msglogChannel.send(editedEmbed);
+        logger.info(`${oldMessage.author.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
+      }
     }
   }
 });
