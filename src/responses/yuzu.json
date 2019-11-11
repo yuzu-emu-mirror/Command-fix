@@ -21,7 +21,8 @@
       "log": { "reply": "This guide tells you how to __get the log file__: <https://yuzu-emu.org/help/reference/log-files/>"},
       "pikachu": { "reply": "https://cdn.discordapp.com/attachments/512678820092968971/516372335826042901/yote.png"},
       "quickstart": { "reply": "Please reference the __Quickstart Guide__ in order to dump your games, keys, and system files for use with yuzu. <https://yuzu-emu.org/help/quickstart/>"},
-      "shaders": { "reply": "Shader caches store parts of the game when compiling, we don't allow sharing or downloading these, since it is considered piracy."}
+      "shaders": { "reply": "Shader caches store parts of the game when compiling, we don't allow sharing or downloading these, since it is considered piracy."},
+      "leaks": { "reply": "The discussion of leaks is not allowed. Talking about the game and its mechanics is fine, talking about the leak and playability is not."}
     }
   }
 
