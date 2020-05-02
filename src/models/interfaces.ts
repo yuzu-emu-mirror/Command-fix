@@ -12,3 +12,10 @@ export interface ICompatList {
         description: string
     }
 }
+
+export interface IResponses {
+    pmReply: string,
+    quotes: {
+        [key: string]: string
+    }
+}
