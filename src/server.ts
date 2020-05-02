@@ -17,7 +17,6 @@ interface IModuleMap {
 }
 
 let cachedModules: IModuleMap = {};
-let cachedTriggers: any[] = [];
 const client = new discord.Client();
 
 const mediaUsers = new Map();
@@ -173,18 +172,6 @@ client.on('message', message => {
       }
     } catch (err) { logger.error(err); }
 
-  } else if (message.author.bot === false) {
-    // This is a normal channel message.
-    cachedTriggers.forEach(function (trigger) {
-      if (!trigger.roles || findArray(message.member.roles.cache.map(x => x.name), trigger.roles)) {
-        if (trigger.trigger(message) === true) {
-          logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
-          try {
-            trigger.execute(message);
-          } catch (err) { logger.error(err); }
-        }
-      }
-    });
   }
 });
 
@@ -201,9 +188,6 @@ fs.readdirSync('./commands/').forEach(function (file) {
     }
   }
 });
-
-// Cache all triggers.
-cachedTriggers = [];
 
 data.readWarnings();
 data.readBans();
