@@ -72,7 +72,7 @@ client.on('messageDelete', message => {
     if (message.content && message.content.startsWith('.') === false && message.author.bot === false) {
       const deletionEmbed = new discord.MessageEmbed()
         .setAuthor(message.author.tag, message.author.displayAvatarURL())
-        .setDescription(`Message deleted in ${message.channel}`)
+        .setDescription(`Message deleted in ${message.channel.toString()}`)
         .addField('Content', message.cleanContent, false)
         .setTimestamp()
         .setColor('RED');
@@ -93,7 +93,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
       if (oldMessage.content !== newMessage.content && oldM && newM) {
         const editedEmbed = new discord.MessageEmbed()
           .setAuthor(oldMessage.author.tag, oldMessage.author.displayAvatarURL())
-          .setDescription(`Message edited in ${oldMessage.channel} [Jump To Message](${newMessage.url})`)
+          .setDescription(`Message edited in ${oldMessage.channel.toString()} [Jump To Message](${newMessage.url})`)
           .addField('Before', oldM, false)
           .addField('After', newM, false)
           .setTimestamp()
@@ -112,7 +112,7 @@ client.on('message', message => {
   if (message.guild == null && state.responses.pmReply) {
     // We want to log PM attempts.
     logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
-    state.logChannel.send(`${message.author} [PM]: ${message.content}`);
+    state.logChannel.send(`${message.author.toString()} [PM]: ${message.content}`);
     message.reply(state.responses.pmReply);
     return;
   }
@@ -157,8 +157,8 @@ client.on('message', message => {
     if (!cachedModule) return; // Not a valid command.
 
     // Check access permissions.
-    if (cachedModule.roles !== undefined && findArray(message.member.roles.cache.map(x => x.name), cachedModule.roles) === false) {
-      state.logChannel.send(`${message.author} attempted to use admin command: ${message.content}`);
+    if (cachedModule.roles && findArray(message.member.roles.cache.map(x => x.name), cachedModule.roles) === false) {
+      state.logChannel.send(`${message.author.toString()} attempted to use admin command: ${message.content}`);
       logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
       return false;
     }
