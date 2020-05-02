@@ -6,7 +6,7 @@ export function command (message: discord.Message, reply: string) {
   if (reply == null) {
     replyMessage = message.content.substr(message.content.indexOf(' ') + 1);
   } else {
-    replyMessage = `${message.mentions.users.map(user => `${user}`)} ${reply}`;
+    replyMessage = `${message.mentions.users.map(user => `${user.toString()}`)} ${reply}`;
   }
 
   message.channel.send(replyMessage);
