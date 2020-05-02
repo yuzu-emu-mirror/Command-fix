@@ -16,6 +16,6 @@ export interface ICompatList {
 export interface IResponses {
     pmReply: string,
     quotes: {
-        [key: string]: string
+        [key: string]: { reply: string }
     }
 }

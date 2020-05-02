@@ -150,47 +150,33 @@ client.on('message', message => {
 
     // Check by the name of the command.
     let cachedModule = cachedModules[`${cmd}.js`];
-    let cachedModuleType = 'Command';
+    let quoteResponse = null;
     // Check by the quotes in the configuration.
-    if (cachedModule == null) { cachedModule = state.responses.quotes[cmd]; cachedModuleType = 'Quote'; }
-
-    if (!cachedModule) return; // Not a valid command.
+    if (!cachedModule) quoteResponse = state.responses.quotes[cmd];
+    if (!cachedModule && !quoteResponse) return; // Not a valid command.
 
     // Check access permissions.
-    if (cachedModule.roles && findArray(message.member.roles.cache.map(x => x.name), cachedModule.roles) === false) {
+    if (cachedModule && cachedModule.roles && !findArray(message.member.roles.cache.map(x => x.name), cachedModule.roles)) {
       state.logChannel.send(`${message.author.toString()} attempted to use admin command: ${message.content}`);
       logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
-      return false;
+      return;
     }
 
     logger.info(`${message.author.username} ${message.author} [Channel: ${message.channel}] executed command: ${message.content}`);
     message.delete();
 
     try {
-      if (cachedModuleType === 'Command') {
+      if (!!cachedModule) {
         cachedModule.command(message);
-      } else if (cachedModuleType === 'Quote') {
-        cachedModules['quote.js'].command(message, cachedModule.reply);
-      }
-    } catch (err) { logger.error(err); }
-
-    // Warn after running command?
-    try {
-      // Check if the command requires a warning.
-      if (cmd !== 'warn' && cachedModule.warn === true) {
-        // Access check to see if the user has privileges to warn.
-        const warnCommand = cachedModules['warn.js'];
-        if (findArray(message.member.roles.cache.map(x => x.name), warnCommand.roles)) {
-          // They are allowed to warn because they are in warn's roles.
-          warnCommand.command(message);
-        }
+      } else if (cachedModules['quote.js']) {
+        cachedModules['quote.js'].command(message, quoteResponse.reply);
       }
     } catch (err) { logger.error(err); }
 
   } else if (message.author.bot === false) {
     // This is a normal channel message.
     cachedTriggers.forEach(function (trigger) {
-      if (trigger.roles === undefined || findArray(message.member.roles.cache.map(x => x.name), trigger.roles)) {
+      if (!trigger.roles || findArray(message.member.roles.cache.map(x => x.name), trigger.roles)) {
         if (trigger.trigger(message) === true) {
           logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
           try {
