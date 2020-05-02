@@ -148,7 +148,7 @@ client.on('message', message => {
     const cmd = message.content.split(' ', 1)[0].slice(1);
 
     // Check by the name of the command.
-    let cachedModule = cachedModules[`${cmd}.js`];
+    let cachedModule = cachedModules[`${cmd.toLowerCase()}`];
     let quoteResponse = null;
     // Check by the quotes in the configuration.
     if (!cachedModule) quoteResponse = state.responses.quotes[cmd];
@@ -167,8 +167,8 @@ client.on('message', message => {
     try {
       if (!!cachedModule) {
         cachedModule.command(message);
-      } else if (cachedModules['quote.js']) {
-        cachedModules['quote.js'].command(message, quoteResponse.reply);
+      } else if (cachedModules['quote']) {
+        cachedModules['quote'].command(message, quoteResponse.reply);
       }
     } catch (err) { logger.error(err); }
 
@@ -183,8 +183,9 @@ fs.readdirSync('./commands/').forEach(function (file) {
     if (file.includes('.disabled')) {
       logger.info(`Did not load disabled module: ${file}`);
     } else {
-      logger.info(`Loaded module: ${file}`);
-      cachedModules[file] = require(`./commands/${file}`);
+      const moduleName = path.basename(file, '.js').toLowerCase();
+      logger.info(`Loaded module: ${moduleName} from ${file}`);
+      cachedModules[moduleName] = require(`./commands/${file}`);
     }
   }
 });
