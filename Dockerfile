@@ -16,7 +16,8 @@ WORKDIR /usr/src/app
 # Copy artifacts
 COPY --from=0 /usr/src/app/dist/ ./
 COPY --from=0 /usr/src/app/node_modules ./node_modules
-COPY env.json ./
+COPY env.json src/responses.json ./
+COPY src/responses ./responses/
 
 RUN addgroup -S app -g 50000 && \
     adduser -S -g app -u 50000 app && \
