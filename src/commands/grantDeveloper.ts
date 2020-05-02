@@ -11,7 +11,7 @@ export function command (message: discord.Message) {
       member.roles.remove(role);
       message.channel.send(`${user.toString()}'s speech has been revoked in the #development channel.`);
     } else {
-      member.roles.remove(role);
+      member.roles.add(role);
       message.channel.send(`${user.toString()} has been granted speech in the #development channel.`);
     }
   });

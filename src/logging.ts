@@ -13,7 +13,7 @@ const logger = winston.createLogger({
       handleExceptions: true
     })
   ],
-  exitOnError: false,
+  exitOnError: true,
 });
 
 // Setup logging for LogDNA cloud logging.
