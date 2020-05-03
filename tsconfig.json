@@ -2,6 +2,7 @@
     "compilerOptions": {
         "module": "CommonJS",
         "noImplicitAny": true,
+        "strictNullChecks": true,
         "removeComments": true,
         "preserveConstEnums": true,
         "outDir": "dist/",

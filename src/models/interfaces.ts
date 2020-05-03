@@ -1,3 +1,5 @@
+import { Message } from 'discord.js';
+
 export interface IGameDBEntry {
     directory: string;
     title: string;
@@ -14,8 +16,13 @@ export interface ICompatList {
 }
 
 export interface IResponses {
-    pmReply: string,
-    quotes: {
-        [key: string]: { reply: string }
+    readonly pmReply: string,
+    readonly quotes: {
+        readonly [key: string]: { readonly reply: string }
     }
+}
+
+export interface IModule {
+    readonly roles?: string[],
+    command: (message: Message, args: string) => void | Promise<void>
 }

@@ -13,13 +13,13 @@ class State {
   stats: { joins: number; ruleAccepts: number; leaves: number; warnings: number; };
   lastGameDBUpdate: number;
   gameDB: IGameDBEntry[];
-  gameDBPromise: Promise<void>;
+  gameDBPromise: Promise<void> | null;
 
   constructor () {
-    this.logChannel = null;
-    this.msglogChannel = null;
+    this.logChannel;
+    this.msglogChannel;
     this.warnings = [];
-    this.responses = null;
+    this.responses;
     this.bans = [];
     this.stats = {
       joins: 0,

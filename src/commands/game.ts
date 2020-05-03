@@ -23,6 +23,11 @@ const compatStrings: ICompatList = {
 
 async function updateDatabase () {
   let body;
+  if (!targetServer) {
+    logger.error('Unable to download latest games list!');
+    return;
+  }
+
   try {
     let response = await fetch(targetServer);
     body = await response.json();
@@ -50,7 +55,7 @@ export async function command (message: discord.Message) {
     // Update remote list of games locally.
     const waitMessage = message.channel.send('This will take a second...');
 
-    if (state.gameDBPromise == null) {
+    if (!state.gameDBPromise) {
       state.gameDBPromise = updateDatabase();
     }
 
@@ -68,16 +73,18 @@ export async function command (message: discord.Message) {
   const game = message.content.substr(message.content.indexOf(' ') + 1);
 
   // Search all games. This is only linear time, so /shrug?
-  let bestGame: IGameDBEntry;
+  let bestGame: IGameDBEntry | null = null;
   let bestScore = 0.5; // Game names must have at least a 50% similarity to be matched
 
-  state.gameDB.forEach(testGame => {
+  // for is faster than forEach
+  for (let index = 0; index < state.gameDB.length; index++) {
+    const testGame = state.gameDB[index];
     const newDistance = stringSimilarity.compareTwoStrings(game.toLowerCase(), testGame.title.toLowerCase());
     if (newDistance > bestScore) {
       bestGame = testGame;
       bestScore = newDistance;
     }
-  });
+  }
 
   if (!bestGame) {
     message.channel.send('Game could not be found.');
