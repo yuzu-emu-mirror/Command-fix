@@ -24,5 +24,11 @@ export interface IResponses {
 
 export interface IModule {
     readonly roles?: string[],
-    command: (message: Message, args: string) => void | Promise<void>
+    command: (message: Message, args?: string) => void | Promise<void>
+}
+
+export interface ITrigger {
+    readonly roles?: string[],
+    trigger: (message: Message, args?: string) => boolean
+    execute: (message: Message, args?: string) => void | Promise<void>
 }

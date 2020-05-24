@@ -9,14 +9,16 @@ import fs = require('fs');
 import logger from './logging';
 import state from './state';
 import * as data from './data';
+import { IModule, ITrigger } from './models/interfaces';
 
 state.responses = require('./responses.json');
 
 interface IModuleMap {
-  [name: string]: any;
+  [name: string]: IModule;
 }
 
 let cachedModules: IModuleMap = {};
+let cachedTriggers: ITrigger[] = [];
 const client = new discord.Client();
 const rulesTrigger = process.env.DISCORD_RULES_TRIGGER;
 const rluesRole = process.env.DISCORD_RULES_ROLE;
@@ -198,6 +200,18 @@ client.on('message', message => {
       }
     } catch (err) { logger.error(err); }
 
+  } else if (message.author.bot === false) {
+    // This is a normal channel message.
+    cachedTriggers.forEach(function (trigger) {
+      if (!trigger.roles || authorRoles && findArray(authorRoles, trigger.roles)) {
+        if (trigger.trigger(message) === true) {
+          logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
+          try {
+            trigger.execute(message);
+          } catch (err) { logger.error(err); }
+        }
+      }
+    });
   }
 });
 
@@ -212,6 +226,25 @@ fs.readdirSync('./commands/').forEach(function (file) {
       const moduleName = path.basename(file, '.js').toLowerCase();
       logger.info(`Loaded module: ${moduleName} from ${file}`);
       cachedModules[moduleName] = require(`./commands/${file}`);
+    }
+  }
+});
+
+// Cache all triggers.
+cachedTriggers = [];
+fs.readdirSync('./triggers/').forEach(function (file) {
+  // Load the module if it's a script.
+  if (path.extname(file) === '.js') {
+    if (file.includes('.disabled')) {
+      logger.info(`Did not load disabled trigger: ${file}`);
+    } else {
+      const moduleName = path.basename(file, '.js').toLowerCase();
+      logger.info(`Loaded trigger: ${moduleName} from ${file}`);
+      try {
+        cachedTriggers.push(require(`./triggers/${file}`));
+      } catch (e) {
+        logger.error(`Could not load trigger ${moduleName}: ${e}`);
+      }
     }
   }
 });
