@@ -32,8 +32,12 @@ export function readBans () {
 
 export function readCustomResponses () {
   // Load the responses file into the responses variable.
-  state.responses = require(`./responses/${process.env.TENANT}.json`);
-  logger.debug(`Loaded responses file for ${process.env.TENANT} from external source.`);
+  try {
+    state.responses = require(`./responses/${process.env.TENANT}.json`);
+    logger.debug(`Loaded responses file for ${process.env.TENANT} from external source.`);
+  } catch (e) {
+    logger.error(`Failed to load ${process.env.TENANT}.json! Custom responses are disabled.`);
+  }
 }
 
 export function flushWarnings () {
