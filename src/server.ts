@@ -145,7 +145,7 @@ client.on('message', message => {
       return;
     }
     if (!findArray(authorRoles, AllowedMediaRoles)) {
-      const urlRegex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi);
+      const urlRegex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&\/=]*)/gi);
       if (message.attachments.size > 0 || message.content.match(urlRegex)) {
         mediaUsers.set(message.author.id, true);
       } else if (mediaUsers.get(message.author.id)) {
