@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:latest
+FROM mhart/alpine-node:latest AS build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,8 +14,8 @@ FROM mhart/alpine-node:latest
 WORKDIR /usr/src/app
 
 # Copy artifacts
-COPY --from=0 /usr/src/app/dist/ ./
-COPY --from=0 /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist/ ./
+COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY env.json src/responses.json ./
 COPY src/responses ./responses/
 

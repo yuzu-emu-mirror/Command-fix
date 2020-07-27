@@ -1,4 +1,4 @@
-# Setting Up Discord
+## Setting Up Discord
 Create server in Discord.
 
 Create text channel for logs.
@@ -9,7 +9,7 @@ Invite Bot to your Server (see **Creating a Bot User** below).
 
 Make bot a Moderator.
 
-# Install & Dependencies
+## Install & Dependencies
 Install Node.js and Yarn.
 
 Install forever (task scheduler).
@@ -44,7 +44,7 @@ Copy App Bot User token to `"clientLoginToken": ""`
 
 ![](http://i.imgur.com/YTGZju9.png)
 
-# Running Bot
+## Running Bot
 
 ##### For Production
 
@@ -56,10 +56,10 @@ First yo need to build the project by running `yarn build`.
 
 `yarn serve`   Requires a config/development.json file.
 
-# License
+## License
 GNU General Public License v2.0
 
-# Creating a Bot User.
+## Creating a Bot User.
 First you need to go to [discord developers](https://discordapp.com/developers/applications/me) and click "New Application"
 ![Application Screen](http://i.imgur.com/FvgfY2Z.png)
 Now give your bot a name and a picture, a description isn't necessary.
