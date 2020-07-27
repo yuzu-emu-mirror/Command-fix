@@ -21,14 +21,14 @@ export function command (message: discord.Message) {
     }
 
     if (alreadyJoined) {
-      member?.roles.remove(role).then(() => {
+      member.roles.remove(role).then(() => {
         message.channel.send(`${user.toString()}'s speech has been revoked in the #development channel.`);
       }).catch(() => {
         state.logChannel.send(`Error revoking ${user.toString()}'s developer speech...`);
         logger.error(`Error revoking ${user} ${user.username}'s developer speech...`);
       });
     } else {
-      member?.roles.add(role).then(() => {
+      member.roles.add(role).then(() => {
         message.channel.send(`${user.toString()} has been granted speech in the #development channel.`);
       }).catch(() => {
         state.logChannel.send(`Error granting ${user.toString()}'s developer speech...`);

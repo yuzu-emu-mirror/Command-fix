@@ -15,7 +15,7 @@ export function command (message: discord.Message) {
       message.channel.send(`${user.toString()}, you have no warnings to clear.`);
     }
 
-    logger.info(`${message.author.username} has cleared all warnings for ${user} ${user.username} [${count.length}].`);
-    state.logChannel.send(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count.length}].`);
+    logger.info(`${message.author.username} has cleared all warnings for ${user} ${user.username} [${count?.length}].`);
+    state.logChannel.send(`${message.author.toString()} has cleared all warnings for ${user.toString()} [${count?.length}].`);
   });
 };

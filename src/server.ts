@@ -90,7 +90,7 @@ client.on('messageDelete', message => {
         .setColor('RED');
 
       state.msglogChannel.send(deletionEmbed);
-      logger.info(`${message.author.username} ${message.author} deleted message: ${message.cleanContent}.`);
+      logger.info(`${message.author?.username} ${message.author} deleted message: ${message.cleanContent}.`);
     }
   }
 });
