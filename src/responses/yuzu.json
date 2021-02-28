@@ -39,7 +39,8 @@
       "vc": { "reply": "yuzu requires the latest versions of Microsoft Visual C++. Please download and install the following dependency: <https://aka.ms/vs/16/release/vc_redist.x64.exe>"},
       "infringe": { "reply": "We are aware of the emulator, and are pursuing legal action. They violate our license, and also ship with copyrighted Nintendo files. As such, any references or discussion of the emulator aren't allowed."},
       "android": { "reply": "While we would love to see yuzu ported to Android in the future, we are currently focused on improving the emulator as a whole. Look out for any future announcements, as we'll make sure to let everyone know if an Android build is on the horizon."},
-      "firmware": { "reply": "Some games require a firmware dump to work properly. Click the following link for instructions on how to dump the firmware from your Nintendo Switch: <https://yuzu-emu.org/help/quickstart/#dumping-system-update-firmware>"}
+      "firmware": { "reply": "Some games require a firmware dump to work properly. Click the following link for instructions on how to dump the firmware from your Nintendo Switch: <https://yuzu-emu.org/help/quickstart/#dumping-system-update-firmware>"},
+      "raptor": { "reply": "Raptor is a 3rd party service that provides a paid alternative to Nintendo Switch Online. We are not associated with Raptor in anyway. After key emulation members and the discerning public shared their opinion with us, we cut all ties with Raptor immediately in 2020. This new fork was made without our permission or cooperation and does not have permission to use the \"yuzu\" name or branding. At this time, we have no plans to add support for any 3rd party services, including Raptor.\n\nAs per our normal policies, we only provide support for our official releases and discussion of any unofficial builds isn't allowed."}
     }
   }
 
