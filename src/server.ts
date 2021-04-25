@@ -128,8 +128,8 @@ client.on('message', message => {
 
   if (message.guild == null && state.responses.pmReply) {
     // We want to log PM attempts.
-    logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
-    state.logChannel.send(`${message.author.toString()} [PM]: ${message.content}`);
+    // logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
+    // state.logChannel.send(`${message.author.toString()} [PM]: ${message.content}`);
     message.reply(state.responses.pmReply);
     return;
   }
