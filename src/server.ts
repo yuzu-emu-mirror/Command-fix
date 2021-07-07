@@ -82,14 +82,20 @@ client.on('messageDelete', message => {
   let parent = (message.channel as discord.TextChannel).parent;
   if (parent && IsIgnoredCategory(parent.name) === false) {
     if (message.content && message.content.startsWith('.') === false && message.author?.bot === false) {
+      let messageAttachment = message.attachments.size > 0 ? message.attachments.array()[0].url : null
+
       const deletionEmbed = new discord.MessageEmbed()
         .setAuthor(message.author?.tag, message.author?.displayAvatarURL())
         .setDescription(`Message deleted in ${message.channel.toString()}`)
         .addField('Content', message.cleanContent, false)
         .setTimestamp()
         .setColor('RED');
+      
+      if (messageAttachment) deletionEmbed.setImage(messageAttachment)
 
-      state.msglogChannel.send(deletionEmbed);
+      let userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`
+
+      state.msglogChannel.send(userInfo, { embed: deletionEmbed });
       logger.info(`${message.author?.username} ${message.author} deleted message: ${message.cleanContent}.`);
     }
   }
@@ -108,6 +114,8 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
       const oldM = oldMessage.cleanContent;
       const newM = newMessage.cleanContent;
       if (oldMessage.content !== newMessage.content && oldM && newM) {
+        let messageAttachment = oldMessage.attachments.size > 0 ? oldMessage.attachments.array()[0].url : null
+
         const editedEmbed = new discord.MessageEmbed()
           .setAuthor(oldMessage.author?.tag, oldMessage.author?.displayAvatarURL())
           .setDescription(`Message edited in ${oldMessage.channel.toString()} [Jump To Message](${newMessage.url})`)
@@ -115,8 +123,12 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
           .addField('After', newM, false)
           .setTimestamp()
           .setColor('GREEN');
+        
+        if (messageAttachment) editedEmbed.setImage(messageAttachment)
 
-        state.msglogChannel.send(editedEmbed);
+        let userInfo = `${oldMessage.author?.toString()} (${oldMessage.author?.username}) (${oldMessage.author})`
+
+        state.msglogChannel.send(userInfo, { embed: editedEmbed });
         logger.info(`${oldMessage.author?.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
       }
     }
