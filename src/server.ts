@@ -81,13 +81,13 @@ client.on('guildMemberAdd', (member) => {
 client.on('messageDelete', message => {
   let parent = (message.channel as discord.TextChannel).parent;
   if (parent && IsIgnoredCategory(parent.name) === false) {
-    if (message.content && message.content.startsWith('.') === false && message.author?.bot === false) {
-      let messageAttachment = message.attachments.size > 0 ? message.attachments.array()[0].url : null
+    if (((message.content && message.content.startsWith('.') === false) || (message.attachments.array().length > 0)) && message.author?.bot === false) {
+      let messageAttachment = message.attachments.array()[0]?.proxyURL
 
       const deletionEmbed = new discord.MessageEmbed()
         .setAuthor(message.author?.tag, message.author?.displayAvatarURL())
         .setDescription(`Message deleted in ${message.channel.toString()}`)
-        .addField('Content', message.cleanContent, false)
+        .addField('Content', message.cleanContent || '<no content>', false)
         .setTimestamp()
         .setColor('RED');
       
@@ -111,10 +111,10 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
   if (!findArray(authorRoles, AllowedRoles)) {
     let parent = (oldMessage.channel as discord.TextChannel).parent;
     if (parent && IsIgnoredCategory(parent.name) === false) {
-      const oldM = oldMessage.cleanContent;
+      const oldM = oldMessage.cleanContent || '<no content>';
       const newM = newMessage.cleanContent;
       if (oldMessage.content !== newMessage.content && oldM && newM) {
-        let messageAttachment = oldMessage.attachments.size > 0 ? oldMessage.attachments.array()[0].url : null
+        let messageAttachment = oldMessage.attachments.array()[0]?.proxyURL
 
         const editedEmbed = new discord.MessageEmbed()
           .setAuthor(oldMessage.author?.tag, oldMessage.author?.displayAvatarURL())
