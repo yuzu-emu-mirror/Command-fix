@@ -17,22 +17,22 @@
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "string-similarity": "^4.0.4",
-    "typescript": "^4.3.5",
+    "typescript": "^4.4.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/ip": "^1.1.0",
     "@types/node": "^14.14.21",
-    "@types/node-fetch": "^2.5.11",
+    "@types/node-fetch": "^2.5.12",
     "@types/string-similarity": "^4.0.0",
-    "@types/ws": "^7.4.6",
-    "eslint": "^7.30.0",
+    "@types/ws": "^7.4.7",
+    "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^4.1.0",
-    "ts-node": "^10.0.0"
+    "ts-node": "^10.2.1"
   },
   "scripts": {
     "build": "yarn run tsc",
