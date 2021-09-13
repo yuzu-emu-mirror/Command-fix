@@ -22,7 +22,7 @@ const compatStrings: ICompatList = {
 };
 
 async function updateDatabase () {
-  let body;
+  let body: any;
   if (!targetServer) {
     logger.error('Unable to download latest games list!');
     return;

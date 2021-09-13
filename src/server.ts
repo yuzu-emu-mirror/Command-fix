@@ -3,15 +3,12 @@ require('checkenv').check();
 
 import discord = require('discord.js');
 import path = require('path');
-// const schedule = require('node-schedule');
 import fs = require('fs');
 
 import logger from './logging';
 import state from './state';
 import * as data from './data';
 import { IModule, ITrigger } from './models/interfaces';
-
-state.responses = require('./responses.json');
 
 interface IModuleMap {
   [name: string]: IModule;
@@ -102,7 +99,7 @@ client.on('messageDelete', message => {
 
         let userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`
 
-        state.msglogChannel.send(userInfo, { embed: deletionEmbed });
+        state.msglogChannel?.send(userInfo, { embed: deletionEmbed });
         logger.info(`${message.author?.username} ${message.author} deleted message: ${message.cleanContent}.`);
       }
     }
@@ -136,7 +133,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
         let userInfo = `${oldMessage.author?.toString()} (${oldMessage.author?.username}) (${oldMessage.author})`
 
-        state.msglogChannel.send(userInfo, { embed: editedEmbed });
+        state.msglogChannel?.send(userInfo, { embed: editedEmbed });
         logger.info(`${oldMessage.author?.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
       }
     }
@@ -204,7 +201,7 @@ client.on('message', message => {
       return;
     }
     if (cachedModule && cachedModule.roles && !findArray(authorRoles, cachedModule.roles)) {
-      state.logChannel.send(`${message.author.toString()} attempted to use admin command: ${message.content}`);
+      state.logChannel?.send(`${message.author.toString()} attempted to use admin command: ${message.content}`);
       logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
       return;
     }

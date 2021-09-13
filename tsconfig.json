@@ -1,4 +1,5 @@
 {
+    "extends": "@tsconfig/node14/tsconfig.json",
     "compilerOptions": {
         "module": "CommonJS",
         "noImplicitAny": true,
@@ -6,7 +7,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "outDir": "dist/",
-        "sourceMap": true
+        "sourceMap": true,
     },
     "include": [
         "src/**/*"

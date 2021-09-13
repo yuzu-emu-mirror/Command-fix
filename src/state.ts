@@ -5,8 +5,8 @@ import discord = require('discord.js');
 
 /* Application State */
 class State {
-  logChannel: discord.TextChannel | discord.DMChannel;
-  msglogChannel: discord.TextChannel | discord.DMChannel;
+  logChannel: discord.TextChannel | discord.DMChannel | null;
+  msglogChannel: discord.TextChannel | discord.DMChannel | null;
   warnings: UserWarning[];
   responses: IResponses;
   bans: UserBan[];
@@ -16,10 +16,10 @@ class State {
   gameDBPromise: Promise<void> | null;
 
   constructor () {
-    this.logChannel;
-    this.msglogChannel;
+    this.logChannel = null;
+    this.msglogChannel = null;
     this.warnings = [];
-    this.responses;
+    this.responses = require('./responses.json');
     this.bans = [];
     this.stats = {
       joins: 0,
