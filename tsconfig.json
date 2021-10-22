@@ -8,6 +8,10 @@
         "preserveConstEnums": true,
         "outDir": "dist/",
         "sourceMap": true,
+        "lib": [
+            "es2018",
+            "dom"
+        ]
     },
     "include": [
         "src/**/*"
