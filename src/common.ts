@@ -11,13 +11,7 @@ export function ban(user: discord.User, moderator: discord.User, guild: discord.
     state.logChannel?.send(`${moderator.toString()} has banned ${user.id} ${user.toString()} [${count}].`);
 
     state.bans.push(new UserBan(user.id, user.username, moderator.id, moderator.username, count));
-    let member = guild?.member(user);
-    if (!member) {
-      state.logChannel?.send(`Error banning ${user.id} ${user.username}: user not found.`);
-      logger.error(`User not found: ${user.toString()} ${user.id} ${user.username} when executing a ban`);
-      // we don't need a return here, because of the optional chaining below
-    }
-    member?.ban().catch(function (error) {
+    guild?.members?.ban(user).catch(function (error) {
       state.logChannel?.send(`Error banning ${user.toString()} ${user.username}`);
       logger.error(`Error banning ${user.toString()} ${user.id} ${user.username}.`, error);
     });

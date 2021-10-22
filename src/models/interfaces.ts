@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, ColorResolvable } from 'discord.js';
 
 export interface IGameDBEntry {
     directory: string;
@@ -10,7 +10,7 @@ export interface ICompatList {
     [key: number]: {
         key: string,
         name: string,
-        color: string,
+        color: ColorResolvable,
         description: string
     }
 }

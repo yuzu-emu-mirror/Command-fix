@@ -17,13 +17,13 @@ export function command(message: discord.Message) {
     fetch(`https://api.github.com/repos/${repo}/commits/${headSHA}/check-runs`, fetchOptions).then(response => response.json()).then((statuses: any) => {
       if (!statuses.check_runs || statuses.total_count < 1) throw new Error('No check runs');
       let msg = new discord.MessageEmbed().setTitle(`Status for PR #${pr_number}`).setURL(pr.html_url);
-      let color = 'GREEN';
+      let color = 'GREEN' as discord.ColorResolvable;
       statuses.check_runs.forEach((run: any) => {
         msg.addField(`${run.name}`, `**[${run.status} ${run.conclusion}](${run.html_url})**`);
         if (run.conclusion !== 'success') color = 'RED';
       });
       msg.setColor(color);
-      message.channel.send(msg);
+      message.channel.send({ embeds: [msg] });
     }).catch(() => {
       message.channel.send('I wasn\'t able to get the status of that PR...')
     });

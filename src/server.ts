@@ -16,7 +16,7 @@ interface IModuleMap {
 
 let cachedModules: IModuleMap = {};
 let cachedTriggers: ITrigger[] = [];
-const client = new discord.Client();
+const client = new discord.Client({ intents: discord.Intents.FLAGS.GUILDS | discord.Intents.FLAGS.GUILD_BANS | discord.Intents.FLAGS.GUILD_MESSAGES });
 const rulesTrigger = process.env.DISCORD_RULES_TRIGGER;
 const rluesRole = process.env.DISCORD_RULES_ROLE;
 const mediaUsers = new Map();
@@ -64,8 +64,6 @@ client.on('warn', (x) => {
   logger.warn(x);
 });
 
-client.on('debug', (x) => null);
-
 client.on('disconnect', () => {
   logger.warn('Disconnected from Discord server.');
 });
@@ -85,8 +83,8 @@ client.on('messageDelete', message => {
   if (!findArray(authorRoles, AllowedRoles)) {
     let parent = (message.channel as discord.TextChannel).parent;
     if (parent && IsIgnoredCategory(parent.name) === false) {
-      if (((message.content && message.content.startsWith('.') === false) || (message.attachments.array().length > 0)) && message.author?.bot === false) {
-        let messageAttachment = message.attachments.array()[0]?.proxyURL
+      if (((message.content && message.content.startsWith('.') === false) || (message.attachments.size > 0)) && message.author?.bot === false) {
+        let messageAttachment = message.attachments.first()?.proxyURL
 
         const deletionEmbed = new discord.MessageEmbed()
           .setAuthor(message.author?.tag, message.author?.displayAvatarURL())
@@ -94,12 +92,12 @@ client.on('messageDelete', message => {
           .addField('Content', message.cleanContent || '<no content>', false)
           .setTimestamp()
           .setColor('RED');
-      
+
         if (messageAttachment) deletionEmbed.setImage(messageAttachment)
 
         let userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`
 
-        state.msglogChannel?.send(userInfo, { embed: deletionEmbed });
+        state.msglogChannel?.send({ content: userInfo, embeds: [deletionEmbed] });
         logger.info(`${message.author?.username} ${message.author} deleted message: ${message.cleanContent}.`);
       }
     }
@@ -119,28 +117,28 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
       const oldM = oldMessage.cleanContent || '<no content>';
       const newM = newMessage.cleanContent;
       if (oldMessage.content !== newMessage.content && oldM && newM) {
-        let messageAttachment = oldMessage.attachments.array()[0]?.proxyURL
+        let messageAttachment = oldMessage.attachments.first()?.proxyURL
 
         const editedEmbed = new discord.MessageEmbed()
-          .setAuthor(oldMessage.author?.tag, oldMessage.author?.displayAvatarURL())
+          .setAuthor(oldMessage.author?.tag || '<unknown>', oldMessage.author?.displayAvatarURL())
           .setDescription(`Message edited in ${oldMessage.channel.toString()} [Jump To Message](${newMessage.url})`)
           .addField('Before', oldM, false)
           .addField('After', newM, false)
           .setTimestamp()
           .setColor('GREEN');
-        
+
         if (messageAttachment) editedEmbed.setImage(messageAttachment)
 
         let userInfo = `${oldMessage.author?.toString()} (${oldMessage.author?.username}) (${oldMessage.author})`
 
-        state.msglogChannel?.send(userInfo, { embed: editedEmbed });
+        state.msglogChannel?.send({ content: userInfo, embeds: [editedEmbed] });
         logger.info(`${oldMessage.author?.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
       }
     }
   }
 });
 
-client.on('message', message => {
+client.on('messageCreate', message => {
   if (message.author.bot && message.content.startsWith('.ban') === false) { return; }
 
   if (message.guild == null && state.responses.pmReply) {

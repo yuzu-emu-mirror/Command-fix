@@ -22,6 +22,6 @@ export function command (message: discord.Message) {
     const warnsString = `Warns: \`\`\`${formatWarnings(warns).join('\n')}\`\`\``;
     const bansString = `Bans: \`\`\`${formatBans(bans).join('\n')}\`\`\``;
 
-    message.channel.send(`\`${user.username} (${totalWarnings}) information:\`${warns.length !== 0 ? warnsString : ''}${bans.length !== 0 ? bansString : ''}`);
+    message.channel.send(`\`${user.username} (${totalWarnings}) information:\`${warns.length !== 0 ? warnsString : '\n<No warnings>\n'}${bans.length !== 0 ? bansString : '<Not banned>'}`);
   });
 };
