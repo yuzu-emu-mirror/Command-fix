@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:latest AS build
+FROM node:16-alpine AS build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -9,7 +9,7 @@ COPY src/ ./src
 RUN yarn install && yarn build && rm -f dist/*.map
 
 # Second stage
-FROM mhart/alpine-node:latest
+FROM node:16-alpine
 
 WORKDIR /usr/src/app
 
