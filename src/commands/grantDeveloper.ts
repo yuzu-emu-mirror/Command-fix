@@ -30,9 +30,8 @@ export function command (message: discord.Message) {
           logger.error(`Error granting ${user} ${user.username}'s developer speech...`);
         });
       }
-    }).catch(async () => {      
+    }).catch(async () => {
       await message.channel.send(`User ${user.toString()} was not found in the channel.`);
     });
-
   });
 }

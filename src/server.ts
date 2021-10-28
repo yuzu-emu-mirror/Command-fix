@@ -1,6 +1,4 @@
 // Check for environmental variables.
-require('checkenv').check();
-
 import discord = require('discord.js');
 import path = require('path');
 import fs = require('fs');
@@ -9,6 +7,8 @@ import logger from './logging';
 import state from './state';
 import * as data from './data';
 import { IModule, ITrigger } from './models/interfaces';
+
+require('checkenv').check();
 
 interface IModuleMap {
   [name: string]: IModule;
@@ -29,13 +29,13 @@ if (!rluesRole) {
   throw new Error('DISCORD_RULES_ROLE somehow became undefined.');
 }
 
-function findArray(haystack: string | any[], arr: any[]) {
+function findArray (haystack: string | any[], arr: any[]) {
   return arr.some(function (v: any) {
     return haystack.indexOf(v) >= 0;
   });
 }
 
-function IsIgnoredCategory(categoryName: string) {
+function IsIgnoredCategory (categoryName: string) {
   const IgnoredCategory = ['internal', 'team', 'development'];
   return IgnoredCategory.includes(categoryName);
 }
@@ -45,8 +45,8 @@ client.on('ready', async () => {
   if (!process.env.DISCORD_LOG_CHANNEL || !process.env.DISCORD_MSGLOG_CHANNEL) {
     throw new Error('DISCORD_LOG_CHANNEL or DISCORD_MSGLOG_CHANNEL not defined.');
   }
-  let logChannel = await client.channels.fetch(process.env.DISCORD_LOG_CHANNEL) as discord.TextChannel;
-  let msglogChannel = await client.channels.fetch(process.env.DISCORD_MSGLOG_CHANNEL) as discord.TextChannel;
+  const logChannel = await client.channels.fetch(process.env.DISCORD_LOG_CHANNEL) as discord.TextChannel;
+  const msglogChannel = await client.channels.fetch(process.env.DISCORD_MSGLOG_CHANNEL) as discord.TextChannel;
   if (!logChannel.send) throw new Error('DISCORD_LOG_CHANNEL is not a text channel!');
   if (!msglogChannel.send) throw new Error('DISCORD_MSGLOG_CHANNEL is not a text channel!');
   state.logChannel = logChannel;
@@ -69,22 +69,21 @@ client.on('disconnect', () => {
 });
 
 client.on('guildMemberAdd', async (member) => {
-  if (process.env.DISCORD_RULES_ROLE)
-    await member.roles.add(process.env.DISCORD_RULES_ROLE);
+  if (process.env.DISCORD_RULES_ROLE) { await member.roles.add(process.env.DISCORD_RULES_ROLE); }
 });
 
 client.on('messageDelete', async (message) => {
   const AllowedRoles = ['Administrators', 'Moderators', 'Team', 'Developer', 'Support', 'VIP'];
-  let authorRoles = message.member?.roles?.cache?.map(x => x.name);
+  const authorRoles = message.member?.roles?.cache?.map(x => x.name);
   if (!authorRoles) {
     logger.error(`Unable to get the roles for ${message.author}`);
     return;
   }
   if (!findArray(authorRoles, AllowedRoles)) {
-    let parent = (message.channel as discord.TextChannel).parent;
+    const parent = (message.channel as discord.TextChannel).parent;
     if (parent && IsIgnoredCategory(parent.name) === false) {
       if (((message.content && message.content.startsWith('.') === false) || (message.attachments.size > 0)) && message.author?.bot === false) {
-        let messageAttachment = message.attachments.first()?.proxyURL
+        const messageAttachment = message.attachments.first()?.proxyURL;
 
         const deletionEmbed = new discord.MessageEmbed()
           .setAuthor(message.author?.tag, message.author?.displayAvatarURL())
@@ -93,9 +92,9 @@ client.on('messageDelete', async (message) => {
           .setTimestamp()
           .setColor('RED');
 
-        if (messageAttachment) deletionEmbed.setImage(messageAttachment)
+        if (messageAttachment) deletionEmbed.setImage(messageAttachment);
 
-        let userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`
+        const userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`;
 
         await state.msglogChannel?.send({ content: userInfo, embeds: [deletionEmbed] });
         logger.info(`${message.author?.username} ${message.author} deleted message: ${message.cleanContent}.`);
@@ -106,18 +105,18 @@ client.on('messageDelete', async (message) => {
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   const AllowedRoles = ['Administrators', 'Moderators', 'Team', 'Developer', 'Support', 'VIP'];
-  let authorRoles = oldMessage.member?.roles?.cache?.map(x => x.name);
+  const authorRoles = oldMessage.member?.roles?.cache?.map(x => x.name);
   if (!authorRoles) {
     logger.error(`Unable to get the roles for ${oldMessage.author}`);
     return;
   }
   if (!findArray(authorRoles, AllowedRoles)) {
-    let parent = (oldMessage.channel as discord.TextChannel).parent;
+    const parent = (oldMessage.channel as discord.TextChannel).parent;
     if (parent && IsIgnoredCategory(parent.name) === false) {
       const oldM = oldMessage.cleanContent || '<no content>';
       const newM = newMessage.cleanContent;
       if (oldMessage.content !== newMessage.content && oldM && newM) {
-        let messageAttachment = oldMessage.attachments.first()?.proxyURL
+        const messageAttachment = oldMessage.attachments.first()?.proxyURL;
 
         const editedEmbed = new discord.MessageEmbed()
           .setAuthor(oldMessage.author?.tag || '<unknown>', oldMessage.author?.displayAvatarURL())
@@ -127,9 +126,9 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
           .setTimestamp()
           .setColor('GREEN');
 
-        if (messageAttachment) editedEmbed.setImage(messageAttachment)
+        if (messageAttachment) editedEmbed.setImage(messageAttachment);
 
-        let userInfo = `${oldMessage.author?.toString()} (${oldMessage.author?.username}) (${oldMessage.author})`
+        const userInfo = `${oldMessage.author?.toString()} (${oldMessage.author?.username}) (${oldMessage.author})`;
 
         await state.msglogChannel?.send({ content: userInfo, embeds: [editedEmbed] });
         logger.info(`${oldMessage.author?.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
@@ -151,7 +150,7 @@ client.on('messageCreate', async (message) => {
 
   logger.verbose(`${message.author.username} ${message.author} [Channel: ${(message.channel as discord.TextChannel).name} ${message.channel}]: ${message.content}`);
 
-  let authorRoles = message.member?.roles?.cache?.map(x => x.name);
+  const authorRoles = message.member?.roles?.cache?.map(x => x.name);
 
   if (message.channel.id === process.env.DISCORD_MEDIA_CHANNEL && !message.author.bot) {
     const AllowedMediaRoles = ['Administrators', 'Moderators', 'Team', 'VIP'];
@@ -187,7 +186,7 @@ client.on('messageCreate', async (message) => {
     const cmd = message.content.split(' ', 1)[0].slice(1);
 
     // Check by the name of the command.
-    let cachedModule = cachedModules[`${cmd.toLowerCase()}`];
+    const cachedModule = cachedModules[`${cmd.toLowerCase()}`];
     let quoteResponse = null;
     // Check by the quotes in the configuration.
     if (!cachedModule) quoteResponse = state.responses.quotes[cmd];
@@ -208,13 +207,12 @@ client.on('messageCreate', async (message) => {
     await message.delete();
 
     try {
-      if (!!cachedModule) {
+      if (cachedModule) {
         await cachedModule.command(message);
-      } else if (cachedModules['quote']) {
-        await cachedModules['quote'].command(message, quoteResponse?.reply);
+      } else if (cachedModules.quote) {
+        await cachedModules.quote.command(message, quoteResponse?.reply);
       }
     } catch (err) { logger.error(err); }
-
   } else if (message.author.bot === false) {
     // This is a normal channel message.
     cachedTriggers.forEach(async function (trigger) {

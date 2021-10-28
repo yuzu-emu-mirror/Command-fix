@@ -24,4 +24,4 @@ export async function command (message: discord.Message) {
 
     await message.channel.send(`\`${user.username} (${totalWarnings}) information:\`${warns.length !== 0 ? warnsString : '\n<No warnings>\n'}${bans.length !== 0 ? bansString : '<Not banned>'}`);
   });
-};
+}

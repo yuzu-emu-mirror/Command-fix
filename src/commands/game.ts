@@ -29,7 +29,7 @@ async function updateDatabase () {
   }
 
   try {
-    let response = await fetch(targetServer);
+    const response = await fetch(targetServer);
     body = await response.json();
   } catch (e) {
     logger.error('Unable to download latest games list!');
@@ -104,5 +104,5 @@ export async function command (message: discord.Message) {
     .setURL(url)
     .setThumbnail(screenshot);
 
-  await message.channel.send({embeds: [embed]});
+  await message.channel.send({ embeds: [embed] });
 }
