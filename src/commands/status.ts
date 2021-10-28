@@ -14,7 +14,7 @@ export function command(message: discord.Message) {
     if (!pr || pr.documentation_url || !pr.head) throw new Error('PR not found');
     const headSHA = pr.head.sha;
     // use the new GitHub checks API
-    fetch(`https://api.github.com/repos/${repo}/commits/${headSHA}/check-runs`, fetchOptions).then(response => response.json()).then((statuses: any) => {
+    fetch(`https://api.github.com/repos/${repo}/commits/${headSHA}/check-runs`, fetchOptions).then(response => response.json()).then(async (statuses: any) => {
       if (!statuses.check_runs || statuses.total_count < 1) throw new Error('No check runs');
       let msg = new discord.MessageEmbed().setTitle(`Status for PR #${pr_number}`).setURL(pr.html_url);
       let color = 'GREEN' as discord.ColorResolvable;
@@ -23,11 +23,11 @@ export function command(message: discord.Message) {
         if (run.conclusion !== 'success') color = 'RED';
       });
       msg.setColor(color);
-      message.channel.send({ embeds: [msg] });
-    }).catch(() => {
-      message.channel.send('I wasn\'t able to get the status of that PR...')
+      await message.channel.send({ embeds: [msg] });
+    }).catch(async () => {
+      await message.channel.send('I wasn\'t able to get the status of that PR...')
     });
-  }).catch(() => {
-    message.channel.send('No such PR.');
+  }).catch(async () => {
+    await message.channel.send('No such PR.');
   });
 }

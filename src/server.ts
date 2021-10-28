@@ -68,12 +68,12 @@ client.on('disconnect', () => {
   logger.warn('Disconnected from Discord server.');
 });
 
-client.on('guildMemberAdd', (member) => {
+client.on('guildMemberAdd', async (member) => {
   if (process.env.DISCORD_RULES_ROLE)
-    member.roles.add(process.env.DISCORD_RULES_ROLE);
+    await member.roles.add(process.env.DISCORD_RULES_ROLE);
 });
 
-client.on('messageDelete', message => {
+client.on('messageDelete', async (message) => {
   const AllowedRoles = ['Administrators', 'Moderators', 'Team', 'Developer', 'Support', 'VIP'];
   let authorRoles = message.member?.roles?.cache?.map(x => x.name);
   if (!authorRoles) {
@@ -97,14 +97,14 @@ client.on('messageDelete', message => {
 
         let userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`
 
-        state.msglogChannel?.send({ content: userInfo, embeds: [deletionEmbed] });
+        await state.msglogChannel?.send({ content: userInfo, embeds: [deletionEmbed] });
         logger.info(`${message.author?.username} ${message.author} deleted message: ${message.cleanContent}.`);
       }
     }
   }
 });
 
-client.on('messageUpdate', (oldMessage, newMessage) => {
+client.on('messageUpdate', async (oldMessage, newMessage) => {
   const AllowedRoles = ['Administrators', 'Moderators', 'Team', 'Developer', 'Support', 'VIP'];
   let authorRoles = oldMessage.member?.roles?.cache?.map(x => x.name);
   if (!authorRoles) {
@@ -131,21 +131,21 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
 
         let userInfo = `${oldMessage.author?.toString()} (${oldMessage.author?.username}) (${oldMessage.author})`
 
-        state.msglogChannel?.send({ content: userInfo, embeds: [editedEmbed] });
+        await state.msglogChannel?.send({ content: userInfo, embeds: [editedEmbed] });
         logger.info(`${oldMessage.author?.username} ${oldMessage.author} edited message from: ${oldM} to: ${newM}.`);
       }
     }
   }
 });
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async (message) => {
   if (message.author.bot && message.content.startsWith('.ban') === false) { return; }
 
   if (message.guild == null && state.responses.pmReply) {
     // We want to log PM attempts.
     // logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
     // state.logChannel.send(`${message.author.toString()} [PM]: ${message.content}`);
-    message.reply(state.responses.pmReply);
+    await message.reply(state.responses.pmReply);
     return;
   }
 
@@ -166,7 +166,7 @@ client.on('messageCreate', message => {
       } else if (mediaUsers.get(message.author.id)) {
         mediaUsers.set(message.author.id, false);
       } else {
-        message.delete();
+        await message.delete();
         mediaUsers.set(message.author.id, false);
       }
     }
@@ -177,11 +177,11 @@ client.on('messageCreate', message => {
     if (message.content.toLowerCase().includes(rulesTrigger)) {
       // We want to remove the 'Unauthorized' role from them once they agree to the rules.
       logger.verbose(`${message.author.username} ${message.author} has accepted the rules, removing role ${process.env.DISCORD_RULES_ROLE}.`);
-      message.member?.roles.remove(rluesRole, 'Accepted the rules.');
+      await message.member?.roles.remove(rluesRole, 'Accepted the rules.');
     }
 
     // Delete the message in the channel to force a cleanup.
-    message.delete();
+    await message.delete();
   } else if (message.content.startsWith('.') && message.content.startsWith('..') === false) {
     // We want to make sure it's an actual command, not someone '...'-ing.
     const cmd = message.content.split(' ', 1)[0].slice(1);
@@ -199,30 +199,30 @@ client.on('messageCreate', message => {
       return;
     }
     if (cachedModule && cachedModule.roles && !findArray(authorRoles, cachedModule.roles)) {
-      state.logChannel?.send(`${message.author.toString()} attempted to use admin command: ${message.content}`);
+      await state.logChannel?.send(`${message.author.toString()} attempted to use admin command: ${message.content}`);
       logger.info(`${message.author.username} ${message.author} attempted to use admin command: ${message.content}`);
       return;
     }
 
     logger.info(`${message.author.username} ${message.author} [Channel: ${message.channel}] executed command: ${message.content}`);
-    message.delete();
+    await message.delete();
 
     try {
       if (!!cachedModule) {
-        cachedModule.command(message);
+        await cachedModule.command(message);
       } else if (cachedModules['quote']) {
-        cachedModules['quote'].command(message, quoteResponse?.reply);
+        await cachedModules['quote'].command(message, quoteResponse?.reply);
       }
     } catch (err) { logger.error(err); }
 
   } else if (message.author.bot === false) {
     // This is a normal channel message.
-    cachedTriggers.forEach(function (trigger) {
+    cachedTriggers.forEach(async function (trigger) {
       if (!trigger.roles || authorRoles && findArray(authorRoles, trigger.roles)) {
         if (trigger.trigger(message) === true) {
           logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
           try {
-            trigger.execute(message);
+            await trigger.execute(message);
           } catch (err) { logger.error(err); }
         }
       }
@@ -272,5 +272,5 @@ if (process.env.DATA_CUSTOM_RESPONSES) {
   data.readCustomResponses();
 }
 
-client.login(process.env.DISCORD_LOGIN_TOKEN);
+client.login(process.env.DISCORD_LOGIN_TOKEN).catch(err => logger.error(err));
 logger.info('Startup completed. Established connection to Discord.');

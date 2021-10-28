@@ -1,6 +1,12 @@
 {
-    "extends": ["eslint:recommended", "standard"],
+    "extends": ["eslint:recommended", "standard",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking"],
+    "plugins": ["@typescript-eslint"],
     "rules": {
       "semi": [2, "always"]
+    },
+    "parserOptions": {
+      "project": ["tsconfig.json"]
     }
 }

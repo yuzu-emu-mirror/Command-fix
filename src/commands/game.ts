@@ -62,11 +62,11 @@ export async function command (message: discord.Message) {
     try {
       await state.gameDBPromise;
     } catch (e) {
-      message.channel.send('Game compatibility feed temporarily unavailable.');
+      await message.channel.send('Game compatibility feed temporarily unavailable.');
       throw e;
     } finally {
       // We don't need this message anymore
-      waitMessage.then(waitMessageResult => waitMessageResult.delete());
+      waitMessage.then(async waitMessageResult => await waitMessageResult.delete());
     }
   }
 
@@ -87,7 +87,7 @@ export async function command (message: discord.Message) {
   }
 
   if (!bestGame) {
-    message.channel.send('Game could not be found.');
+    await message.channel.send('Game could not be found.');
     return;
   }
 
@@ -104,5 +104,5 @@ export async function command (message: discord.Message) {
     .setURL(url)
     .setThumbnail(screenshot);
 
-  message.channel.send({embeds: [embed]});
+  await message.channel.send({embeds: [embed]});
 }

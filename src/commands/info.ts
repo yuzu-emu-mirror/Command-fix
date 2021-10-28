@@ -13,8 +13,8 @@ function formatBans (bans: UserBan[]) {
   return bans.map(x => `[${x.date}] ${x.warnedByUsername} banned ${x.username} [${x.priorWarnings} + 1].`);
 }
 
-export function command (message: discord.Message) {
-  message.mentions.users.map((user) => {
+export async function command (message: discord.Message) {
+  message.mentions.users.map(async (user) => {
     const totalWarnings = state.warnings.filter(x => x.id === user.id && x.cleared === false).length;
     const warns = state.warnings.filter(x => x.id === user.id);
     const bans = state.bans.filter(x => x.id === user.id);
@@ -22,6 +22,6 @@ export function command (message: discord.Message) {
     const warnsString = `Warns: \`\`\`${formatWarnings(warns).join('\n')}\`\`\``;
     const bansString = `Bans: \`\`\`${formatBans(bans).join('\n')}\`\`\``;
 
-    message.channel.send(`\`${user.username} (${totalWarnings}) information:\`${warns.length !== 0 ? warnsString : '\n<No warnings>\n'}${bans.length !== 0 ? bansString : '<Not banned>'}`);
+    await message.channel.send(`\`${user.username} (${totalWarnings}) information:\`${warns.length !== 0 ? warnsString : '\n<No warnings>\n'}${bans.length !== 0 ? bansString : '<Not banned>'}`);
   });
 };
