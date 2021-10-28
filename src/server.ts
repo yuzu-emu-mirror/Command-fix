@@ -16,7 +16,7 @@ interface IModuleMap {
 
 let cachedModules: IModuleMap = {};
 let cachedTriggers: ITrigger[] = [];
-const client = new discord.Client({ intents: discord.Intents.FLAGS.GUILDS | discord.Intents.FLAGS.GUILD_BANS | discord.Intents.FLAGS.GUILD_MESSAGES });
+const client = new discord.Client({ intents: discord.Intents.FLAGS.GUILD_MEMBERS | discord.Intents.FLAGS.GUILDS | discord.Intents.FLAGS.GUILD_BANS | discord.Intents.FLAGS.GUILD_MESSAGES });
 const rulesTrigger = process.env.DISCORD_RULES_TRIGGER;
 const rluesRole = process.env.DISCORD_RULES_ROLE;
 const mediaUsers = new Map();
