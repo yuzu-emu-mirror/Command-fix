@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 # Install app dependencies and add source files
 COPY package.json yarn.lock tsconfig.json ./
 COPY src/ ./src 
-RUN yarn install && yarn build && rm -f dist/*.map
+RUN yarn install --frozen-lockfile && yarn build && rm -f dist/*.map
 
 # Second stage
 FROM node:16-alpine
