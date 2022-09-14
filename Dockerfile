@@ -4,9 +4,9 @@ FROM node:16-alpine AS build
 WORKDIR /usr/src/app
 
 # Install app dependencies and add source files
-COPY package.json yarn.lock tsconfig.json ./
-COPY src/ ./src 
-RUN yarn install --frozen-lockfile && yarn build && rm -f dist/*.map
+COPY package.json env.json yarn.lock tsconfig.json bundle.sh *.js ./
+COPY ./src ./src
+RUN yarn install --frozen-lockfile && sh -e ./bundle.sh
 
 # Second stage
 FROM node:16-alpine
@@ -15,9 +15,6 @@ WORKDIR /usr/src/app
 
 # Copy artifacts
 COPY --from=build /usr/src/app/dist/ ./
-COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY env.json src/responses.json ./
-COPY src/responses ./responses/
 
 RUN addgroup -S app -g 50000 && \
     adduser -S -g app -u 50000 app && \

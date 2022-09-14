@@ -46,6 +46,7 @@
     "postinstall": "node generateExports.js",
     "build": "yarn run rollup -c",
     "check": "yarn run tsc --noEmit",
+    "bundle": "./bundle.sh",
     "serve": "yarn run ts-node ./src/server.ts"
   }
 }
