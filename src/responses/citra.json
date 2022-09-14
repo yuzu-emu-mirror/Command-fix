@@ -23,6 +23,7 @@
       "scam": { "reply": "If you believe that a user is attempting to scam you or others, please report them to discord trust and safety and promptly block them. \nTo report the user, please follow this link <https://dis.gd/request>. \nFor more information about how to report them, please look here: <https://support.discord.com/hc/en-us/articles/360000291932-How-to-Properly-Report-Issues-to-Trust-Safety>. \nFinally, if this is the only server you share, please report the user (including screenshots of the conversation) to our moderation team, so that we can address the issue."},
       "keys": { "reply": "Users need to provide encryption keys to use encrypted ROMs on Citra. Please follow the provided instructions below to obtain the keys from your 3DS. <https://citra-emu.org/wiki/aes-keys/>"},
       "mod": {"reply": "To modify a user's 3ds, please follow the guide at <http://3ds.hacks.guide> and have some way to read an SD card on a computer or phone."},
+      "multiplayer": {"reply": "To set up multiplayer with a friend, one of you must change the network settings mentioned in <https://citra-emu.org/help/feature/multiplayer>"},
       "lenny": { "reply": "( ͡° ͜ʖ ͡°)"},
       "( ͡° ͜ʖ ͡°)": { "reply": "lenny"},
       "r1": { "reply": ":beginner: **Rule #1:** \nStay courteous and respectful to others."},
