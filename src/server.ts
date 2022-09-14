@@ -8,7 +8,6 @@ import modules from './commands/_';
 import triggers from './triggers/_';
 
 // Check for environmental variables.
-// eslint-disable-next-line
 import * as checkenv from 'checkenv';
 checkenv.setConfig(require('../env.json'));
 checkenv.check();
