@@ -16,7 +16,7 @@ interface IModuleMap {
 
 let cachedModules: IModuleMap = {};
 let cachedTriggers: ITrigger[] = [];
-const client = new discord.Client({ intents: discord.Intents.FLAGS.GUILD_MEMBERS | discord.Intents.FLAGS.GUILDS | discord.Intents.FLAGS.GUILD_BANS | discord.Intents.FLAGS.GUILD_MESSAGES });
+const client = new discord.Client({ intents: discord.GatewayIntentBits.GuildMembers | discord.GatewayIntentBits.Guilds | discord.GatewayIntentBits.GuildBans | discord.GatewayIntentBits.GuildMessages });
 const rulesTrigger = process.env.DISCORD_RULES_TRIGGER;
 const rluesRole = process.env.DISCORD_RULES_ROLE;
 const mediaUsers = new Map();
@@ -29,13 +29,13 @@ if (!rluesRole) {
   throw new Error('DISCORD_RULES_ROLE somehow became undefined.');
 }
 
-function findArray (haystack: string | any[], arr: any[]) {
+function findArray(haystack: string | any[], arr: any[]) {
   return arr.some(function (v: any) {
     return haystack.indexOf(v) >= 0;
   });
 }
 
-function IsIgnoredCategory (categoryName: string) {
+function IsIgnoredCategory(categoryName: string) {
   const IgnoredCategory = ['internal', 'team', 'development'];
   return IgnoredCategory.includes(categoryName);
 }
@@ -85,12 +85,12 @@ client.on('messageDelete', async (message) => {
       if (((message.content && message.content.startsWith('.') === false) || (message.attachments.size > 0)) && message.author?.bot === false) {
         const messageAttachment = message.attachments.first()?.proxyURL;
 
-        const deletionEmbed = new discord.MessageEmbed()
-          .setAuthor(message.author?.tag, message.author?.displayAvatarURL())
+        const deletionEmbed = new discord.EmbedBuilder()
+          .setAuthor({ name: message.author?.tag, iconURL: message.author?.displayAvatarURL() })
           .setDescription(`Message deleted in ${message.channel.toString()}`)
-          .addField('Content', message.cleanContent || '<no content>', false)
+          .addFields({ name: 'Content', value: message.cleanContent || '<no content>', inline: false })
           .setTimestamp()
-          .setColor('RED');
+          .setColor('Red');
 
         if (messageAttachment) deletionEmbed.setImage(messageAttachment);
 
@@ -118,13 +118,12 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
       if (oldMessage.content !== newMessage.content && oldM && newM) {
         const messageAttachment = oldMessage.attachments.first()?.proxyURL;
 
-        const editedEmbed = new discord.MessageEmbed()
-          .setAuthor(oldMessage.author?.tag || '<unknown>', oldMessage.author?.displayAvatarURL())
+        const editedEmbed = new discord.EmbedBuilder()
+          .setAuthor({ name: oldMessage.author?.tag || '<unknown>', iconURL: oldMessage.author?.displayAvatarURL() })
           .setDescription(`Message edited in ${oldMessage.channel.toString()} [Jump To Message](${newMessage.url})`)
-          .addField('Before', oldM, false)
-          .addField('After', newM, false)
+          .addFields({ name: 'Before', value: oldM, inline: false }, { name: 'After', value: newM, inline: false })
           .setTimestamp()
-          .setColor('GREEN');
+          .setColor('Green');
 
         if (messageAttachment) editedEmbed.setImage(messageAttachment);
 

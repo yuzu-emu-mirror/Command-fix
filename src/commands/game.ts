@@ -16,12 +16,12 @@ const compatStrings: ICompatList = {
   1: { key: '1', name: 'Great', color: '#47d35c', description: 'Game functions with minor graphical or audio glitches and is playable from start to finish. May require some workarounds.' },
   2: { key: '2', name: 'Okay', color: '#94b242', description: 'Game functions with major graphical or audio glitches, but game is playable from start to finish with workarounds.' },
   3: { key: '3', name: 'Bad', color: '#f2d624', description: 'Game functions, but with major graphical or audio glitches. Unable to progress in specific areas due to glitches even with workarounds.' },
-  4: { key: '4', name: 'Intro/Menu', color: 'RED', description: 'Game is completely unplayable due to major graphical or audio glitches. Unable to progress past the Start Screen.' },
+  4: { key: '4', name: 'Intro/Menu', color: 'Red', description: 'Game is completely unplayable due to major graphical or audio glitches. Unable to progress past the Start Screen.' },
   5: { key: '5', name: "Won't Boot", color: '#828282', description: 'The game crashes when attempting to startup.' },
-  99: { key: '99', name: 'Not Tested', color: 'DARK_BUT_NOT_BLACK', description: 'The game has not yet been tested.' }
+  99: { key: '99', name: 'Not Tested', color: 'DarkButNotBlack', description: 'The game has not yet been tested.' }
 };
 
-async function updateDatabase () {
+async function updateDatabase() {
   let body: any;
   if (!targetServer) {
     logger.error('Unable to download latest games list!');
@@ -50,7 +50,7 @@ async function updateDatabase () {
   state.gameDBPromise = null;
 }
 
-export async function command (message: discord.Message) {
+export async function command(message: discord.Message) {
   if (Date.now() - state.lastGameDBUpdate > refreshTime) {
     // Update remote list of games locally.
     const waitMessage = message.channel.send('This will take a second...');
@@ -96,8 +96,8 @@ export async function command (message: discord.Message) {
 
   const compat = compatStrings[bestGame.compatibility];
 
-  const embed = new discord.MessageEmbed()
-    .addField('Status', compat.name, true)
+  const embed = new discord.EmbedBuilder()
+    .addFields({ name: 'Status', value: compat.name, inline: true })
     .setTitle(bestGame.title)
     .setColor(compat.color)
     .setDescription(compat.description)
