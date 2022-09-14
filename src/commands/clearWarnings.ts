@@ -1,7 +1,7 @@
 import state from '../state';
 import * as data from '../data';
 import logger from '../logging';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators'];
 export function command (message: discord.Message) {

@@ -1,7 +1,7 @@
 import UserWarning from './models/UserWarning';
 import UserBan from './models/UserBan';
 import { IGameDBEntry, IResponses } from './models/interfaces';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 /* Application State */
 class State {

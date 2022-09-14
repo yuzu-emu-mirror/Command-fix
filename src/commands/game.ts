@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import discord = require('discord.js');
-import stringSimilarity = require('string-similarity');
+import * as discord from 'discord.js';
+import * as stringSimilarity from 'string-similarity';
 
 import logger from '../logging';
 import state from '../state';

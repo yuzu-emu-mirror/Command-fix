@@ -1,7 +1,7 @@
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators'];
-export async function command (message: discord.Message, reply: string) {
+export async function command (message: discord.Message, reply: string | undefined) {
   let replyMessage;
   if (reply == null) {
     replyMessage = message.content.substr(message.content.indexOf(' ') + 1);

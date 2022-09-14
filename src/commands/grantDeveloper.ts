@@ -1,6 +1,6 @@
 import state from '../state';
 import logger from '../logging';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators', 'CitraBot'];
 export function command (message: discord.Message) {

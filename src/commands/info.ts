@@ -1,7 +1,7 @@
 import state from '../state';
 import UserBan from '../models/UserBan';
 import UserWarning from '../models/UserWarning';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators'];
 

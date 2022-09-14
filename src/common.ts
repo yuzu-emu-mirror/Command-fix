@@ -2,7 +2,7 @@ import state from './state';
 import * as data from './data';
 import logger from './logging';
 import UserBan from './models/UserBan';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 export async function ban (user: discord.User, moderator: discord.User, guild: discord.Guild | null) {
   const count = state.warnings.filter(x => x.id === user.id && !x.cleared).length || 0;

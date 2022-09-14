@@ -20,6 +20,10 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^14.1.0",
+    "@rollup/plugin-typescript": "^8.5.0",
     "@tsconfig/node14": "^1.0.3",
     "@types/ip": "^1.1.0",
     "@types/node": "^18.7.18",
@@ -34,10 +38,13 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-standard": "^5.0.0",
+    "rollup": "^2.79.0",
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "build": "yarn run tsc",
+    "postinstall": "node generateExports.js",
+    "build": "yarn run rollup -c",
+    "check": "yarn run tsc --noEmit",
     "serve": "yarn run ts-node ./src/server.ts"
   }
 }

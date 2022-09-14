@@ -1,7 +1,7 @@
 import { ban } from '../common';
 import state from '../state';
 import logger from '../logging';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 export function trigger (message: discord.Message) {
   return message.mentions.users.size > 10;

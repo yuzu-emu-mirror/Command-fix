@@ -1,38 +1,39 @@
-// Check for environmental variables.
-import discord = require('discord.js');
-import path = require('path');
-import fs = require('fs');
+import * as discord from 'discord.js';
 
 import logger from './logging';
 import state from './state';
 import * as data from './data';
 import { IModule, ITrigger } from './models/interfaces';
+import modules from './commands/_';
+import triggers from './triggers/_';
 
-require('checkenv').check();
+// Check for environmental variables.
+// eslint-disable-next-line
+import * as checkenv from 'checkenv';
+checkenv.setConfig(require('../env.json'));
+checkenv.check();
 
 interface IModuleMap {
   [name: string]: IModule;
 }
 
-let cachedModules: IModuleMap = {};
-let cachedTriggers: ITrigger[] = [];
-const client = new discord.Client({ intents: discord.GatewayIntentBits.GuildMembers | discord.GatewayIntentBits.Guilds | discord.GatewayIntentBits.GuildBans | discord.GatewayIntentBits.GuildMessages });
+const cachedModules: IModuleMap = modules;
+const cachedTriggers: ITrigger[] = triggers;
+const client = new discord.Client({ intents: discord.GatewayIntentBits.GuildMembers | discord.GatewayIntentBits.Guilds | discord.GatewayIntentBits.GuildBans | discord.GatewayIntentBits.GuildMessages | discord.GatewayIntentBits.DirectMessages | discord.GatewayIntentBits.MessageContent });
 const rulesTrigger = process.env.DISCORD_RULES_TRIGGER;
-const rluesRole = process.env.DISCORD_RULES_ROLE;
+const rulesRole = process.env.DISCORD_RULES_ROLE;
 const mediaUsers = new Map();
 
 logger.info('Application startup. Configuring environment.');
 if (!rulesTrigger) {
   throw new Error('DISCORD_RULES_TRIGGER somehow became undefined.');
 }
-if (!rluesRole) {
+if (!rulesRole) {
   throw new Error('DISCORD_RULES_ROLE somehow became undefined.');
 }
 
 function findArray(haystack: string | any[], arr: any[]) {
-  return arr.some(function (v: any) {
-    return haystack.indexOf(v) >= 0;
-  });
+  return arr.some((v: any) => haystack.indexOf(v) >= 0);
 }
 
 function IsIgnoredCategory(categoryName: string) {
@@ -175,7 +176,7 @@ client.on('messageCreate', async (message) => {
     if (message.content.toLowerCase().includes(rulesTrigger)) {
       // We want to remove the 'Unauthorized' role from them once they agree to the rules.
       logger.verbose(`${message.author.username} ${message.author} has accepted the rules, removing role ${process.env.DISCORD_RULES_ROLE}.`);
-      await message.member?.roles.remove(rluesRole, 'Accepted the rules.');
+      await message.member?.roles.remove(rulesRole, 'Accepted the rules.');
     }
 
     // Delete the message in the channel to force a cleanup.
@@ -224,40 +225,6 @@ client.on('messageCreate', async (message) => {
         }
       }
     });
-  }
-});
-
-// Cache all command modules.
-cachedModules = {};
-fs.readdirSync('./commands/').forEach(function (file) {
-  // Load the module if it's a script.
-  if (path.extname(file) === '.js') {
-    if (file.includes('.disabled')) {
-      logger.info(`Did not load disabled module: ${file}`);
-    } else {
-      const moduleName = path.basename(file, '.js').toLowerCase();
-      logger.info(`Loaded module: ${moduleName} from ${file}`);
-      cachedModules[moduleName] = require(`./commands/${file}`);
-    }
-  }
-});
-
-// Cache all triggers.
-cachedTriggers = [];
-fs.readdirSync('./triggers/').forEach(function (file) {
-  // Load the module if it's a script.
-  if (path.extname(file) === '.js') {
-    if (file.includes('.disabled')) {
-      logger.info(`Did not load disabled trigger: ${file}`);
-    } else {
-      const moduleName = path.basename(file, '.js').toLowerCase();
-      logger.info(`Loaded trigger: ${moduleName} from ${file}`);
-      try {
-        cachedTriggers.push(require(`./triggers/${file}`));
-      } catch (e) {
-        logger.error(`Could not load trigger ${moduleName}: ${e}`);
-      }
-    }
   }
 });
 

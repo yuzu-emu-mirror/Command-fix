@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
 const fetchOptions = {
   headers: { 'User-Agent': 'Citra-Emu/CitraBot (Node.js)', Accept: 'application/vnd.github.antiope-preview+json' }

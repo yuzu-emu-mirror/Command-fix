@@ -2,10 +2,10 @@ import state from '../state';
 import * as data from '../data';
 import logger from '../logging';
 import UserWarning from '../models/UserWarning';
-import discord = require('discord.js');
+import * as discord from 'discord.js';
 
-exports.roles = ['Admins', 'Moderators'];
-exports.command = function (message: discord.Message) {
+export const roles = ['Admins', 'Moderators'];
+export function command(message: discord.Message) {
   const silent = message.content.includes('silent');
 
   message.mentions.users.map(async (user) => {

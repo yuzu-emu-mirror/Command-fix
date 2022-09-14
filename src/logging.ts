@@ -1,4 +1,4 @@
-import winston = require('winston');
+import * as winston from 'winston';
 import * as ip from 'ip';
 import * as os from 'os';
 
