@@ -3,7 +3,6 @@
   "version": "2.0.0",
   "description": "Citra bot for Discord",
   "author": "chris062689 <chris062689@gmail.com>",
-  "preferGlobal": true,
   "private": true,
   "subdomain": "citra-emu",
   "analyze": true,
@@ -14,7 +13,7 @@
     "ip": "^1.1.8",
     "logdna": "^3.5.3",
     "logdna-winston": "^4.0.1",
-    "node-fetch": "^2",
+    "node-fetch": "^3",
     "string-similarity": "^4.0.4",
     "typescript": "^4.8.3",
     "winston": "^3.8.2"
