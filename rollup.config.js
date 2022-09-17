@@ -9,7 +9,6 @@ loader;
 
 export default {
   input: "src/server.ts",
-  external: ["discord.js"],
   preserveEntrySignatures: false,
   output: {
     dir: "dist",
