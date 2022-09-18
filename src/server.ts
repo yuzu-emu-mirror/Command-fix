@@ -115,7 +115,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     if (parent && IsIgnoredCategory(parent.name) === false) {
       const oldM = oldMessage.cleanContent || '<no content>';
       const newM = newMessage.cleanContent;
-      if (oldMessage.content !== newMessage.content && oldM && newM) {
+      if (oldMessage.content !== newMessage.content && newM) {
         const messageAttachment = oldMessage.attachments.first()?.proxyURL;
 
         const editedEmbed = new discord.EmbedBuilder()

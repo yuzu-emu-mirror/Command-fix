@@ -1,5 +1,4 @@
 import { ban } from '../common';
-import { IModule } from '../models/interfaces';
 import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators', 'CitraBot'];
