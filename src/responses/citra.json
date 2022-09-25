@@ -24,6 +24,9 @@
       "keys": { "reply": "Users need to provide encryption keys to use encrypted ROMs on Citra. Please follow the provided instructions below to obtain the keys from your 3DS. <https://citra-emu.org/wiki/aes-keys/>"},
       "mod": {"reply": "To modify a user's 3ds, please follow the guide at <http://3ds.hacks.guide> and have some way to read an SD card on a computer or phone."},
       "multiplayer": {"reply": "To set up multiplayer with a friend, one of you must change the network settings mentioned in <https://citra-emu.org/help/feature/multiplayer>"},
+      "portable": {"reply": "Go to <https://citra-emu.org/download/> and select `Manual download`. Then under **Nightly Build**, click on your operating system's icon to the right of the latest build available to download the build.\nExtract it (.7z can be extracted using Winrar or 7zip) and put it wherever you wish. Inside the extracted `nightly-mingw` folder, create a folder called `user`. This Citra should now store all of its config, save files and such inside of this `user` folder.\nCheck to make sure that this `user` folder is in the same folder that contains `citra-qt(.exe)`\nNow run the `citra-qt` executable found inside of the `mingw` folder."},
+      "ios": {"reply": "Citra does not have an iOS version because iOS is a \"funky\" operating system to develop for. Therefore, any related videos are scams, and any links are most likely viruses."},
+      "macos": {"reply": "Last working build for macOS users:\n\nDownload `citra-osx-20220901-d380980.tar.gz` from <https://github.com/citra-emu/citra-nightly/releases/download/nightly-1782/citra-osx-20220901-d380980.tar.gz>\nExtract the `.tar.gz` file and run `citra-qt`."}, 
       "lenny": { "reply": "( ͡° ͜ʖ ͡°)"},
       "( ͡° ͜ʖ ͡°)": { "reply": "lenny"},
       "r1": { "reply": ":beginner: **Rule #1:** \nStay courteous and respectful to others."},
@@ -37,4 +40,3 @@
       "r9": { "reply": ":beginner: **Rule #9:** \nIn case of no written rule — the discretion of moderators shall take precedence."}
     }
   }
-  
