@@ -4,7 +4,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { terser } from "rollup-plugin-terser";
 
-import * as loader from "./generateExports";
+import * as loader from "./generateExports.js";
 loader;
 
 export default {
