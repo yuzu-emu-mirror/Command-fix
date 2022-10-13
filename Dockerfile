@@ -4,7 +4,7 @@ FROM node:16-alpine AS build
 WORKDIR /usr/src/app
 
 # Install app dependencies and add source files
-COPY package.json env.json yarn.lock tsconfig.json bundle.sh *.js ./
+COPY package.json env.json yarn.lock tsconfig.json bundle.sh *.js *.mjs ./
 COPY ./src ./src
 RUN yarn install --frozen-lockfile && sh -e ./bundle.sh
 
