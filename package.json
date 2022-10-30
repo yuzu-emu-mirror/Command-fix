@@ -7,6 +7,9 @@
   "subdomain": "citra-emu",
   "analyze": true,
   "license": "GPL-2.0+",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "checkenv": "^1.2.2",
     "discord.js": "^14.6.0",
