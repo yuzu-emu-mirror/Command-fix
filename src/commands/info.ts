@@ -6,15 +6,15 @@ import * as discord from 'discord.js';
 export const roles = ['Admins', 'Moderators'];
 
 function formatWarnings (warnings: UserWarning[]) {
-  return warnings.map(x => `[${x.date}] ${x.warnedByUsername} warned ${x.username} [${x.priorWarnings} + 1]. ${x.silent ? '(silent)' : ''} ${x.cleared ? '(cleared)' : ''}`);
+  return warnings.map(x => `[${x.date.toISOString()}] ${x.warnedByUsername} warned ${x.username} [${x.priorWarnings} + 1]. ${x.silent ? '(silent)' : ''} ${x.cleared ? '(cleared)' : ''}`);
 }
 
 function formatBans (bans: UserBan[]) {
-  return bans.map(x => `[${x.date}] ${x.warnedByUsername} banned ${x.username} [${x.priorWarnings} + 1].`);
+  return bans.map(x => `[${x.date.toISOString()}] ${x.warnedByUsername} banned ${x.username} [${x.priorWarnings} + 1].`);
 }
 
 export async function command (message: discord.Message) {
-  message.mentions.users.map(async (user) => {
+  return Promise.all(message.mentions.users.map(async (user) => {
     const totalWarnings = state.warnings.filter(x => x.id === user.id && x.cleared === false).length;
     const warns = state.warnings.filter(x => x.id === user.id);
     const bans = state.bans.filter(x => x.id === user.id);
@@ -23,5 +23,5 @@ export async function command (message: discord.Message) {
     const bansString = `Bans: \`\`\`${formatBans(bans).join('\n')}\`\`\``;
 
     await message.channel.send(`\`${user.username} (${totalWarnings}) information:\`${warns.length !== 0 ? warnsString : '\n<No warnings>\n'}${bans.length !== 0 ? bansString : '<Not banned>'}`);
-  });
+  }));
 }

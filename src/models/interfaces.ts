@@ -24,7 +24,7 @@ export interface IResponses {
 
 export interface IModule {
     readonly roles?: string[],
-    command: (message: Message, args?: string) => void | Promise<void>
+    command: (message: Message, args?: string) => Promise<void> | Promise<void[]>
 }
 
 export interface ITrigger {

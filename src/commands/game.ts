@@ -66,7 +66,7 @@ export async function command(message: discord.Message) {
       throw e;
     } finally {
       // We don't need this message anymore
-      waitMessage.then(async waitMessageResult => await waitMessageResult.delete());
+      await waitMessage.then(async waitMessageResult => await waitMessageResult.delete());
     }
   }
 

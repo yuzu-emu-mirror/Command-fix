@@ -10,6 +10,6 @@ export function trigger (message: discord.Message) {
 export async function execute (message: discord.Message) {
   const count = message.mentions.users.size;
   logger.info(`${message.author.toString()} tagged ${count} users in ${message.channel.toString()}`);
-  state.logChannel?.send(`Ping bomb detected in ${message.channel.toString()} by ${message.author.toString()}`);
+  await state.logChannel?.send(`Ping bomb detected in ${message.channel.toString()} by ${message.author.toString()}`);
   await ban(message.author, message.author, message.guild);
 }

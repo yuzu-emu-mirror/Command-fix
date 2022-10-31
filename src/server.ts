@@ -31,8 +31,8 @@ if (!rulesRole) {
   throw new Error('DISCORD_RULES_ROLE somehow became undefined.');
 }
 
-function findArray(haystack: string | any[], arr: any[]) {
-  return arr.some((v: any) => haystack.indexOf(v) >= 0);
+function findArray(haystack: string | string[], arr: string[]) {
+  return arr.some((v: string) => haystack.indexOf(v) >= 0);
 }
 
 function IsIgnoredCategory(categoryName: string) {
@@ -158,7 +158,7 @@ client.on('messageCreate', async (message) => {
       return;
     }
     if (!findArray(authorRoles, AllowedMediaRoles)) {
-      const urlRegex = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&\/=]*)/gi);
+      const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/gi;
       if (message.attachments.size > 0 || message.content.match(urlRegex)) {
         mediaUsers.set(message.author.id, true);
       } else if (mediaUsers.get(message.author.id)) {
@@ -214,16 +214,18 @@ client.on('messageCreate', async (message) => {
     } catch (err) { logger.error(err); }
   } else if (message.author.bot === false) {
     // This is a normal channel message.
-    cachedTriggers.forEach(async function (trigger) {
-      if (!trigger.roles || authorRoles && findArray(authorRoles, trigger.roles)) {
-        if (trigger.trigger(message) === true) {
-          logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
-          try {
-            await trigger.execute(message);
-          } catch (err) { logger.error(err); }
+    await Promise.all(
+      cachedTriggers.map(async function (trigger) {
+        if (!trigger.roles || (authorRoles && findArray(authorRoles, trigger.roles))) {
+          if (trigger.trigger(message)) {
+            logger.debug(`${message.author.username} ${message.author} [Channel: ${message.channel}] triggered: ${message.content}`);
+            try {
+              await trigger.execute(message);
+            } catch (err) { logger.error(err); }
+          }
         }
-      }
-    });
+      })
+    );
   }
 });
 

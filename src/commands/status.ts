@@ -7,16 +7,16 @@ const fetchOptions = {
 const repo = process.env.GITHUB_REPOSITORY || 'citra-emu/citra';
 
 export const roles = ['Admins', 'Moderators', 'Developer'];
-export function command(message: discord.Message) {
-  const pr_number = message.content.substr(message.content.indexOf(' ') + 1).replace(/\n/g, '');
-  const url = `https://api.github.com/repos/${repo}/pulls/${pr_number}`;
-  fetch(url, fetchOptions).then(response => response.json()).then((pr: any) => {
+export async function command(message: discord.Message) {
+  const prNumber = message.content.substr(message.content.indexOf(' ') + 1).replace(/\n/g, '');
+  const url = `https://api.github.com/repos/${repo}/pulls/${prNumber}`;
+  return fetch(url, fetchOptions).then(response => response.json()).then((pr: any) => {
     if (!pr || pr.documentation_url || !pr.head) throw new Error('PR not found');
     const headSHA = pr.head.sha;
     // use the new GitHub checks API
     fetch(`https://api.github.com/repos/${repo}/commits/${headSHA}/check-runs`, fetchOptions).then(response => response.json()).then(async (statuses: any) => {
       if (!statuses.check_runs || statuses.total_count < 1) throw new Error('No check runs');
-      const msg = new discord.EmbedBuilder().setTitle(`Status for PR #${pr_number}`).setURL(pr.html_url);
+      const msg = new discord.EmbedBuilder().setTitle(`Status for PR #${prNumber}`).setURL(pr.html_url);
       let color = 'GREEN' as discord.ColorResolvable;
       statuses.check_runs.forEach((run: any) => {
         msg.addFields({ name: run.name, value: `**[${run.status} ${run.conclusion}](${run.html_url})**` });

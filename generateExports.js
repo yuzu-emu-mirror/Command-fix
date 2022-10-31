@@ -26,9 +26,9 @@ console.info('Generating module loader ...');
 let modules = collectModules('commands', '.ts');
 let loader_content = header;
 for (let mod of modules) {
-    loader_content += `import * as ${mod} from "./${mod}";\n`;
+    loader_content += `import * as ${mod} from './${mod}';\n`;
 }
-let loader_map = modules.map((moduleName) => `${moduleName.toLowerCase()}: ${moduleName}`).join(', ');
+let loader_map = modules.map((moduleName) => moduleName.toLowerCase() === moduleName ? moduleName : `${moduleName.toLowerCase()}: ${moduleName}`).join(', ');
 loader_content += `\nexport default { ${loader_map} };\n`;
 fs.writeFileSync("./src/commands/_.ts", loader_content);
 

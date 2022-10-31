@@ -5,13 +5,13 @@ import UserWarning from '../models/UserWarning';
 import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators'];
-export function command(message: discord.Message) {
+export async function command(message: discord.Message) {
   const silent = message.content.includes('silent');
 
-  message.mentions.users.map(async (user) => {
+  return Promise.all(message.mentions.users.map(async (user) => {
     const count = state.warnings.filter(x => x.id === user.id && !x.cleared).length || 0;
 
-    if (silent === false) {
+    if (!silent) {
       await message.channel.send(`${user.toString()} You have been warned. Additional infractions may result in a ban.`);
     }
 
@@ -20,5 +20,5 @@ export function command(message: discord.Message) {
 
     state.warnings.push(new UserWarning(user.id, user.username, message.author.id, message.author.username, count, silent));
     data.flushWarnings();
-  });
-};
+  }));
+}
