@@ -70,7 +70,7 @@ export async function command(message: discord.Message) {
     }
   }
 
-  const game = message.content.substr(message.content.indexOf(' ') + 1);
+  const game = message.content.substring(message.content.indexOf(' ') + 1);
 
   // Search all games. This is only linear time, so /shrug?
   let bestGame: IGameDBEntry | null = null;

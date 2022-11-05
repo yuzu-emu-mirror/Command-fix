@@ -8,7 +8,7 @@ const repo = process.env.GITHUB_REPOSITORY || 'citra-emu/citra';
 
 export const roles = ['Admins', 'Moderators', 'Developer'];
 export async function command(message: discord.Message) {
-  const prNumber = message.content.substr(message.content.indexOf(' ') + 1).replace(/\n/g, '');
+  const prNumber = message.content.substring(message.content.indexOf(' ') + 1).replace(/\n/g, '');
   const url = `https://api.github.com/repos/${repo}/pulls/${prNumber}`;
   return fetch(url, fetchOptions).then(response => response.json()).then((pr: any) => {
     if (!pr || pr.documentation_url || !pr.head) throw new Error('PR not found');

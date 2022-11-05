@@ -140,9 +140,7 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot && message.content.startsWith('.ban') === false) { return; }
 
   if (message.guild == null && state.responses.pmReply) {
-    // We want to log PM attempts.
-    // logger.info(`${message.author.username} ${message.author} [PM]: ${message.content}`);
-    // state.logChannel.send(`${message.author.toString()} [PM]: ${message.content}`);
+    // We want to reply to PM attempts.
     await message.reply(state.responses.pmReply);
     return;
   }
