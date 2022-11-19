@@ -16,9 +16,9 @@ jobs:
         node-version: [16.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn
@@ -29,15 +29,15 @@ jobs:
     runs-on: ubuntu-latest
     if: (github.ref == 'refs/heads/master') && (github.repository == 'citra-emu/discord-bot')
     steps:
-    - uses: actions/checkout@v2
-    - uses: docker/setup-buildx-action@v1
+    - uses: actions/checkout@v3
+    - uses: docker/setup-buildx-action@v2
       name: Setup Docker BuildX system
     - name: Login to DockerHub
-      uses: docker/login-action@v1 
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - uses: docker/build-push-action@v2
+    - uses: docker/build-push-action@v3
       name: Deploy the image
       with:
         push: true
