@@ -17,9 +17,6 @@ export default {
   plugins: [
     resolve({ browser: false }),
     commonjs({
-      dynamicRequireTargets: [
-        "node_modules/logform/*.js"
-      ],
       extensions: [".mjs", ".js", ".ts"],
       transformMixedEsModules: true,
       ignoreGlobal: true,
