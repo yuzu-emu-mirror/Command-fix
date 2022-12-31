@@ -9,7 +9,9 @@ import triggers from './triggers/_';
 
 // Check for environmental variables.
 import * as checkenv from 'checkenv';
-checkenv.setConfig(require('../env.json'));
+import envConfig from '../env.json';
+
+checkenv.setConfig(envConfig);
 checkenv.check();
 
 interface IModuleMap {
@@ -31,11 +33,11 @@ if (!rulesRole) {
   throw new Error('DISCORD_RULES_ROLE somehow became undefined.');
 }
 
-function findArray(haystack: string | string[], arr: string[]) {
+function findArray (haystack: string | string[], arr: string[]) {
   return arr.some((v: string) => haystack.indexOf(v) >= 0);
 }
 
-function IsIgnoredCategory(categoryName: string) {
+function IsIgnoredCategory (categoryName: string) {
   const IgnoredCategory = ['internal', 'team', 'development'];
   return IgnoredCategory.includes(categoryName);
 }

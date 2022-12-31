@@ -1,6 +1,7 @@
 import * as winston from 'winston';
 import * as ip from 'ip';
 import * as os from 'os';
+import LogdnaWinston from 'logdna-winston';
 
 const logger = winston.createLogger({
   level: 'debug',
@@ -18,10 +19,9 @@ const logger = winston.createLogger({
 
 // Setup logging for LogDNA cloud logging.
 if (process.env.LOGDNA_API_KEY) {
-  const logdnaWinston = require('logdna-winston');
   const logLevel = process.env.LOGDNA_LEVEL || 'info';
 
-  logger.add(new logdnaWinston({
+  logger.add(new LogdnaWinston({
     level: logLevel,
     app: process.env.LOGDNA_APPNAME,
     index_meta: true,

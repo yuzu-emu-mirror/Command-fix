@@ -1,6 +1,12 @@
 import * as fs from 'fs';
 import state from './state';
 import logger from './logging';
+import { IResponses } from './models/interfaces';
+
+const responses: { [index: string]: IResponses } = {
+  citra: require('./responses/citra.json'),
+  yuzu: require('./responses/yuzu.json')
+};
 
 export function readWarnings () {
   // Load the warnings file into the application state.
@@ -32,12 +38,14 @@ export function readBans () {
 
 export function readCustomResponses () {
   // Load the responses file into the responses variable.
-  try {
-    state.responses = require(`./responses/${process.env.TENANT}.json`);
-    logger.debug(`Loaded responses file for ${process.env.TENANT} from external source.`);
-  } catch (e) {
-    logger.error(`Failed to load ${process.env.TENANT}.json! Custom responses are disabled.`);
+  if (process.env.TENANT) {
+    state.responses = responses[process.env.TENANT];
+    if (state.responses) {
+      logger.debug(`Loaded responses file for ${process.env.TENANT} from external source.`);
+      return;
+    }
   }
+  logger.error(`Failed to load ${process.env.TENANT}.json! Custom responses are disabled.`);
 }
 
 export function flushWarnings () {
