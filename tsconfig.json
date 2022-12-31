@@ -1,13 +1,14 @@
 {
-    "extends": "@tsconfig/node16/tsconfig.json",
+    "extends": "@tsconfig/node18/tsconfig.json",
     "compilerOptions": {
         "module": "esnext",
         "noImplicitAny": true,
         "strictNullChecks": true,
+        "resolveJsonModule": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outDir": "dist/",
         "sourceMap": true,
+        "esModuleInterop": true,
         "lib": [
             "es2018",
             "dom"

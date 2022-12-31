@@ -1,7 +1,7 @@
 {
     "extends": ["eslint:recommended", "standard",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:@typescript-eslint/recommended-requiring-type-checking"],
+      "plugin:@typescript-eslint/recommended"
+    ],
     "plugins": ["@typescript-eslint"],
     "rules": {
       "semi": [2, "always"]

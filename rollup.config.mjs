@@ -18,9 +18,7 @@ export default {
     resolve({ browser: false }),
     commonjs({
       dynamicRequireTargets: [
-        "node_modules/logform/*.js",
-        "./src/responses/citra.json",
-        "./src/responses/yuzu.json",
+        "node_modules/logform/*.js"
       ],
       extensions: [".mjs", ".js", ".ts"],
       transformMixedEsModules: true,
