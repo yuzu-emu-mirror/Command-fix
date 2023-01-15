@@ -8,7 +8,7 @@
   "analyze": true,
   "license": "GPL-2.0+",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "checkenv": "^1.2.2",
@@ -22,11 +22,6 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "=23.0.4",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "@rollup/plugin-terser": "^0.3.0",
-    "@rollup/plugin-typescript": "^11.0.0",
     "@tsconfig/node18": "^1.0.1",
     "@types/ip": "^1.1.0",
     "@types/node": "^18.11.18",
@@ -35,17 +30,17 @@
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
+    "esbuild": "^0.17.0",
     "eslint": "^8.31.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.4",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
-    "rollup": "^3.10.0",
     "ts-node": "^10.9.1"
   },
   "scripts": {
     "postinstall": "node generateExports.js",
-    "build": "yarn run rollup -c",
+    "build": "yarn run esbuild --bundle src/server.ts --platform=node --target=node18 --outdir=dist/",
     "check": "yarn run tsc --noEmit",
     "bundle": "./bundle.sh",
     "serve": "yarn run ts-node ./src/server.ts"
