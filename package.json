@@ -40,7 +40,7 @@
   },
   "scripts": {
     "postinstall": "node generateExports.js",
-    "build": "yarn run esbuild --bundle src/server.ts --platform=node --target=node18 --outdir=dist/",
+    "build": "yarn run esbuild --bundle src/server.ts --platform=node --target=node18 --outdir=dist/ --minify-whitespace",
     "check": "yarn run tsc --noEmit",
     "bundle": "./bundle.sh",
     "serve": "yarn run ts-node ./src/server.ts"
