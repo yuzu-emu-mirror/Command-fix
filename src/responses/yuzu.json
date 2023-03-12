@@ -44,7 +44,8 @@
       "firmware": { "reply": "Some games require a firmware dump to work properly. Click the following link for instructions on how to dump the firmware from your Nintendo Switch: <https://yuzu-emu.org/help/quickstart/#dumping-system-firmware>"},
       "raptor": { "reply": "Raptor is a 3rd party service that provides a paid alternative to Nintendo Switch Online. We are not associated with Raptor in anyway. After key emulation members and the discerning public shared their opinion with us, we cut all ties with Raptor immediately in 2020. This new fork was made without our permission or cooperation and does not have permission to use the \"yuzu\" name or branding. At this time, we have no plans to add support for any 3rd party services, including Raptor.\n\nAs per our normal policies, we only provide support for our official releases and discussion of any unofficial builds isn't allowed."},
       "role": { "reply": "To claim your Patreon Discord role, please follow this guide: <https://support.patreon.com/hc/en-us/articles/212052266-Get-my-Discord-role>"},
-      "release": { "reply": "yuzu builds can be manually downloaded on Github: <https://github.com/yuzu-emu/yuzu-mainline/releases>"}
+      "release": { "reply": "yuzu builds can be manually downloaded on Github: <https://github.com/yuzu-emu/yuzu-mainline/releases>"},
+      "rec": { "reply": "For information on recommended settings and GPU drivers for yuzu, please refer to this page: <https://community.citra-emu.org/t/recommended-settings/319349>"}
     }
   }
 
