@@ -6,7 +6,7 @@ export async function command (message: discord.Message, reply: string | undefin
   if (reply == null) {
     replyMessage = message.content.substring(message.content.indexOf(' ') + 1);
   } else {
-    replyMessage = `${message.mentions.users.map(user => `${user.toString()}`).join(' ')} ${reply}`;
+    replyMessage = `${message.mentions.users.map(user => user.toString()).join(' ')} ${reply}`;
   }
 
   await message.channel.send(replyMessage);

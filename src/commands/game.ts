@@ -21,8 +21,8 @@ const compatStrings: ICompatList = {
   99: { key: '99', name: 'Not Tested', color: 'DarkButNotBlack', description: 'The game has not yet been tested.' }
 };
 
-async function updateDatabase() {
-  let body: any;
+async function updateDatabase () {
+  let body: IGameDBEntry[];
   if (!targetServer) {
     logger.error('Unable to download latest games list!');
     return;
@@ -30,7 +30,7 @@ async function updateDatabase() {
 
   try {
     const response = await fetch(targetServer);
-    body = await response.json();
+    body = (await response.json()) as IGameDBEntry[];
   } catch (e) {
     logger.error('Unable to download latest games list!');
     throw e;
@@ -50,7 +50,7 @@ async function updateDatabase() {
   state.gameDBPromise = null;
 }
 
-export async function command(message: discord.Message) {
+export async function command (message: discord.Message) {
   if (Date.now() - state.lastGameDBUpdate > refreshTime) {
     // Update remote list of games locally.
     const waitMessage = message.channel.send('This will take a second...');
@@ -87,8 +87,7 @@ export async function command(message: discord.Message) {
   }
 
   if (!bestGame) {
-    await message.channel.send('Game could not be found.');
-    return;
+    return message.channel.send('Game could not be found.');
   }
 
   const screenshot = `${iconBase}${bestGame.directory}.png`;

@@ -5,7 +5,7 @@ import UserWarning from '../models/UserWarning';
 import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators'];
-export async function command(message: discord.Message) {
+export async function command (message: discord.Message) {
   const silent = message.content.includes('silent');
 
   return Promise.all(message.mentions.users.map(async (user) => {

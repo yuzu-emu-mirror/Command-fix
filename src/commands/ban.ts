@@ -3,7 +3,5 @@ import * as discord from 'discord.js';
 
 export const roles = ['Admins', 'Moderators', 'CitraBot'];
 export async function command (message: discord.Message) {
-  return Promise.all(message.mentions.users.map(async (user) => {
-    await ban(user, message.author, message.guild);
-  }));
+  return Promise.all(message.mentions.users.map(async (user) => ban(user, message.author, message.guild)));
 }
