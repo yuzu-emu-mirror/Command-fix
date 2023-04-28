@@ -18,3 +18,26 @@ export async function ban (user: discord.User, moderator: discord.User, guild: d
 
   data.flushBans();
 }
+
+export async function grantRole (member: discord.GuildMember, role: string, channel: discord.TextBasedChannel) {
+  const user = member.user;
+  const roleDisplayName = role.toLowerCase();
+
+  const alreadyJoined = member.roles.cache.has(role);
+  if (alreadyJoined) {
+    member.roles.remove(role).then(async () => {
+      await channel.send(`${user.toString()}'s ${roleDisplayName} role has been revoked.`);
+    }).catch(async () => {
+      await state.logChannel?.send(`Error revoking ${user.toString()}'s ${roleDisplayName} speech...`);
+      logger.error(`Error revoking ${user.toString()} ${user.username}'s ${roleDisplayName} speech...`);
+    });
+    return;
+  }
+
+  member.roles.add(role).then(async () => {
+    await channel.send(`${user.toString()} has been granted ${roleDisplayName} speech.`);
+  }).catch(async () => {
+    await state.logChannel?.send(`Error granting ${user.toString()}'s ${roleDisplayName} speech...`);
+    logger.error(`Error granting ${user.toString()} ${user.username}'s ${roleDisplayName} speech...`);
+  });
+}
