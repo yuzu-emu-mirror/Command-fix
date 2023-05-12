@@ -87,7 +87,8 @@ export async function command (message: discord.Message) {
   }
 
   if (!bestGame) {
-    return message.channel.send('Game could not be found.');
+    await message.channel.send('Game could not be found.');
+    return;
   }
 
   const screenshot = `${iconBase}${bestGame.directory}.png`;
