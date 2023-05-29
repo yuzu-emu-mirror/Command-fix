@@ -83,8 +83,8 @@ client.on('messageDelete', async (message) => {
   }
   if (!findArray(authorRoles, AllowedRoles)) {
     const parent = (message.channel as discord.TextChannel).parent;
-    if (parent && IsIgnoredCategory(parent.name) === false) {
-      if (((message.content && message.content.startsWith('.') === false) || (message.attachments.size > 0)) && message.author?.bot === false) {
+    if (parent && !IsIgnoredCategory(parent.name)) {
+      if (((message.content && !message.content.startsWith('.')) || (message.attachments.size > 0)) && message.author?.bot === false) {
         const messageAttachment = message.attachments.first()?.proxyURL;
 
         const deletionEmbed = new discord.EmbedBuilder()
@@ -114,7 +114,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
   }
   if (!findArray(authorRoles, AllowedRoles)) {
     const parent = (oldMessage.channel as discord.TextChannel).parent;
-    if (parent && IsIgnoredCategory(parent.name) === false) {
+    if (parent && !IsIgnoredCategory(parent.name)) {
       const oldM = oldMessage.cleanContent || '<no content>';
       const newM = newMessage.cleanContent;
       if (oldMessage.content !== newMessage.content && newM) {
@@ -139,7 +139,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 });
 
 client.on('messageCreate', async (message) => {
-  if (message.author.bot && message.content.startsWith('.ban') === false) { return; }
+  if (message.author.bot && !message.content.startsWith('.ban')) { return; }
 
   if (message.guild == null && state.responses.pmReply) {
     // We want to reply to PM attempts.
@@ -180,7 +180,7 @@ client.on('messageCreate', async (message) => {
 
     // Delete the message in the channel to force a cleanup.
     await message.delete();
-  } else if (message.content.startsWith('.') && message.content.startsWith('..') === false) {
+  } else if (message.content.startsWith('.') && !message.content.startsWith('..')) {
     // We want to make sure it's an actual command, not someone '...'-ing.
     const cmd = message.content.split(' ', 1)[0].slice(1);
 
@@ -212,7 +212,7 @@ client.on('messageCreate', async (message) => {
         await cachedModules.quote.command(message, quoteResponse?.reply);
       }
     } catch (err) { logger.error(err); }
-  } else if (message.author.bot === false) {
+  } else if (!message.author.bot) {
     // This is a normal channel message.
     await Promise.all(
       cachedTriggers.map(async function (trigger) {
