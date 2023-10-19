@@ -214,7 +214,7 @@ client.on('messageCreate', async (message) => {
     };
     await Promise.all(
       [
-        state.logChannel?.send(`${message.author.username} ${message.author.id} [Channel: ${message.channel}] executed command: \`${message.content}\``),
+        state.msglogChannel?.send(`${message.author.username} ${message.author.id} [Channel: ${message.channel}] executed command: \`${message.content}\``),
         message.delete(),
         executeModule()
       ]
