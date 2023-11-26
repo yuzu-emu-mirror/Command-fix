@@ -218,7 +218,7 @@ client.on('messageCreate', async (message) => {
       .addFields({ name: 'Command', value: `\`\`\`\n${message.content}\n\`\`\``, inline: false })
       .setTimestamp()
       .setColor('Blue');
-    const userInfo = `${message.author?.toString()} (${message.author?.username}) (${message.author})`;
+    const userInfo = `\`${message.author?.toString()}\` (${message.author?.username})`;
     await Promise.all(
       [
         state.msglogChannel?.send({ content: userInfo, embeds: [commandUsageEmbed] }),
